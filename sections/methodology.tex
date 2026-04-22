@@ -17,16 +17,47 @@ Lernmechanismus korrekt funktionieren.
 
 \subsubsection{Design der fake Solver}
 
+Ich habe künstliche Solver erstellt, die explizite, bekannte Beziehungen zu den Eigenschaften der 
+Instanzen aufweisen (z. B. zur Anzahl der Variablen). Auf diese Weise konnte ich eine Referenzgröße 
+definieren: Für jede Instanz wussten ich genau, welcher Solver als der schnellste anzusehen war.
 
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{3-Solver-Test}: Auf kleine, mittlere und große Instanzen spezialisierte Solver, basierend auf Schwellenwerten für die Variablenanzahl (33. und 67. Perzentil).
+    \item \textbf{4-Solver-Test}: Zwei Solver basieren auf der Variablenanzahl und zwei auf der Klauselanzahl, wobei eine klare Hierarchie besteht (Variablenspezialisten dominieren).
+\end{itemize}
 
 
 \subsubsection{Resultate}
 
+\vspace{4pt}
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Test} & \textbf{Solver Count} & \textbf{Accuracy} \\
+        \midrule
+        Sprungfunktion mit beliebigen Schwellenwerten (100k/200k) & 3 & 65\% \\
+        \midrule
+        Lineare Funktion (laufzeit in relation zur Anzahl der Variablen) & 3 & 99\% \\
+        \midrule
+        Sprungfunktion mit datenabhängigen Schwellenwerten & 3 & 99.25\% \\
+        \midrule
+        Schrittweise Hierarchie (Variablen + Klauseln) & 4 & 99.75\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Testergebnisse für verschiedene Auswahlstrategien}\label{tab:test_results}
+\end{table}
 
 
 
 \subsubsection{Interpretation}
 
+
+Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests bestätigte, dass:
 
 
 
