@@ -1,0 +1,85 @@
+\section{Einleitung}\label{sec:einleitung}
+
+Das Erfüllbarkeitsproblem der Aussagenlogik (SAT, von englisch satisfabiality "Erfüllbarkeit") ist ein 
+fundamentales Problem der Informatik mit kritischen Anwendungen in Software und Hardware Überprüfung.
+
+\subsection{Conjunctive Normal Form (CNF)}
+
+Bei einer Boolschen Formel, die aus durch UND- und ODER-Operatoren verbunden Variablen 
+besteht, (AND $\land$, OR $\lor$, NOT $\neg$) geht es beim SAT-Problem um die Frage, ob es eine Zuorndung von 
+Warheitswerten zu den Variablen gibt, bei der die gesamte Formel als Wahr ausgewertet wird.
+
+Moderne SAT-Löser arbeiten in der Regel mit Formeln in konjunktiver Normalform (CNF). Eine CNF-Formel 
+besteht aus:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Variablen}: Boolesche Variablen (z. B. $x_1$, $x_2$, ..., $x_n$)
+    \item \textbf{Literale}: Eine Variable oder deren Negation (z. B. $x_1$ oder $\neg x_1$)
+    \item \textbf{Klauseln}: Eine Disjunktion (ODER) von Literalen (z. B. $(x_1 \lor \neg x_2 \lor x_3)$)
+    \item \textbf{Formel}: Eine Konjunktion (UND) von Satzteilen (z. B. $(x_1 \lor \neg x_2) \land (\neg x_1 \lor x_3) \land (x_2 \lor \neg x_3)$
+\end{itemize}
+
+Das CNF-Format ist sowohl ausdrucksstark (jede Boolesche Formel lässt sich in CNF umwandeln) als auch für 
+algorithmisches Denken gut geeignet. Das folgende Beispiel zeigt eine einfache CNF-Datei:
+
+\begin{verbatim}
+p cnf 3 4
+1 -2 0
+-1 3 0
+2 -3 0
+-1 -2 -3 0
+\end{verbatim}
+
+Dies stellt eine Formel mit 3 Variablen und 4 Klauseln dar. Die Zeile „p cnf“ gibt den Problemtyp und die 
+Dimensionen an (3 Variablen, 4 Klauseln), und jede nachfolgende Zeile stellt eine Klausel dar, die mit 0 
+endet.
+
+\newpage
+
+\subsection{Warum SAT wichtig ist}
+
+Trotz seiner theoretischen Bedeutung als erstes NP-vollständiges Problem (Cook, 1971) hat SAT breite 
+praktische Anwendung in den Bereichen Hardware-Verifikation, Software-Testing, Planung und künstliche
+Intelligenz gefunden.\cite{cook1971complexity}
+
+Moderne SAT-solver haben in den letzten zwei Jahrzenten bemerkenswerte fortschritte gemacht; Löser wie
+Kissat (Biere et al., 2020) sind in der Lage, industrielle Instanzen mit Millionen von Variablen zu
+lösen.\cite{biere2020cadical}
+
+SAT hat breite praktische Anwendung gefunden, da sich viele Probleme aus der realen Welt als 
+SAT-Instanzen formulieren lassen:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Hardware-Verifikation}: Nachweis, dass sich digitale Schaltungen korrekt verhalten
+    \item \textbf{Softwaretests}: Erstellung von Testfällen, die bestimmte Pfade abdecken
+    \item \textbf{Planung und Terminierung}: Ermittlung von Handlungsabläufen, mit denen Ziele erreicht werden
+    \item \textbf{Kryptoanalyse}: Knacken kryptografischer Systeme durch das Lösen logischer Beschränkungen
+    \item \textbf{Bioinformatik}: Analyse genetischer Sequenzen und Proteinfaltung
+\end{itemize}
+
+Die praktische Bedeutung von SAT hat jahrzehntelange Forschungen zur Entwicklung effizienter SAT-Löser 
+vorangetrieben.
+
+Der praktische Erfolg der SAT-Lösung ist weitgehend auf die bemerkenswerte Leistungsfähigkeit von 
+CDCL-Lösern (Conflict-Driven Clause Learning) zurückzuführen. In der SAT-Forschung ist jedoch 
+bekannt, dass kein einzelner Löser bei allen Instanzen allen anderen überlegen ist. Verschiedene 
+Solver weisen komplementäre Leistungsmerkmale auf – ein Solver, der bei einer Instanzfamilie extrem 
+schnell ist, kann bei einer anderen schlecht abschneiden. Diese Beobachtung hat zur Entwicklung von 
+Algorithmusauswahlsystemen geführt, die automatisch den für eine bestimmte Instanz am besten 
+geeigneten Solver auswählen.
+
+Diese Erkenntnis hat zur Entwicklung des portfoliabasierten SAT-Lösens geführt, bei dem eine Sammlung 
+von Solvern gepflegt wird und ein Auswahlmechanismus entscheidet, welcher Solver für eine bestimmte 
+Instanz eingesetzt wird. Die zugrunde liegende Idee ist einfach, aber wirkungsvoll: Wenn wir vorhersagen 
+können, welcher Solver bei einer Instanz die beste Leistung erbringt, können wir erhebliche Rechenzeit 
+einsparen, indem wir Solver mit schlechter Leistung vermeiden.
+
+
+
+
