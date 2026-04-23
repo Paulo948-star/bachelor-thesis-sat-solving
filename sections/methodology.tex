@@ -32,7 +32,7 @@ definieren: Für jede Instanz wussten ich genau, welcher Solver als der schnells
 
 \subsubsection{Resultate}
 
-\vspace{4pt}
+Genauigkeit der Ergebnisse der Fake Solver:
 
 \begin{table}[htbp]
     \centering
@@ -52,6 +52,25 @@ definieren: Für jede Instanz wussten ich genau, welcher Solver als der schnells
     \caption{Testergebnisse für verschiedene Auswahlstrategien}\label{tab:test_results}
 \end{table}
 
+\newpage
+
+Wichtigste Features der Fake Solver:
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Rang} & \textbf{Feature} & \textbf{Relevanz} \\
+        \midrule
+        1 & nvarsOrig & 13.07\% \\
+        \midrule
+        2 & VCG-CLAUSE-min & 8.46\% \\
+        \midrule
+        3 & nvars & 7.79\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Testergebnisse der wichtigsten Features}\label{tab:feature_results}
+\end{table}
 
 
 \subsubsection{Interpretation}
@@ -59,8 +78,16 @@ definieren: Für jede Instanz wussten ich genau, welcher Solver als der schnells
 
 Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests bestätigte, dass:
 
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item Die Feature extraction erfasst die Eigenschaften der Instanzen korrekt. nvarsOrig führt die direkte Messung der Anzahl der ursprünglichen Variablen durch – das wichtigste Unterscheidungsmerkmal, nvars die Anzahl der Variablen nach dem Preprocesing und VCG-CLAUSE-min den minimaler Klauselgrad in einem Graphen mit variablen Klauseln (korreliert mit der Größe) 
+    \item Die Trainingspipeline (Random-Forest-Klassifikator, Kreuzvalidierung) funktioniert wie vorgesehen.
+    \item Das Scheitern des ersten Tests (65 \%) war auf schlecht gewählte Schwellenwerte (100k/200k) zurückzuführen, die zu einem unausgewogenen Datensatz führten – nicht auf einen Fehler in Satzilla selbst.
+\end{itemize}
 
-
+\textbf{Fazit}: Die Satzilla-Pipeline funktioniert einwandfrei und ist bereit für das Training mit echten Solver-Daten.
 
 
 
