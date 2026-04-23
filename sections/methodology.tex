@@ -95,24 +95,44 @@ Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests bestätigte, dass:
 
 \subsection{Trainieren auf echten Kissat Solvern}
 
+Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solvers trainiert:
 
-
-
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item kissat\_default
+    \item kissat\_noeliminate
+    \item kissat\_nostable
+    \item kissat\_stable
+    \item kissat\_stable2
+    \item kissat\_target2
+\end{itemize}
 
 
 \subsubsection{Dataset}
 
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{397 Instanzen} mit vollständigen Features, die Features wurden mithilfen des Satzilla tools extrahiert
+    \item \textbf{Laufzeiten} für jeden Solver bei jeder Instanz (aus tatsächlichen Ausführungen)
+    \item \textbf{Train/test split}: 80 \% Training (317 Fälle), 20 \% Test (80 Fälle), stratifiziert, um die Verteilung der Solver beizubehalten
+\end{itemize}
 
 
 
+\subsubsection{Training Konfiguration}
 
-
-
-
-
- \subsubsection{Training Konfiguration}
-
-
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Model}: Random Forest Classifier (200 trees, max depth 20)
+    \item \textbf{Features}: 131 strukturelle Features (ohne LP-Merkmale, gemäß rt\_pred.py)
+    \item \textbf{Ziel}: Für jede Instanz der Solver mit der kürzesten Laufzeit (der schnellste)
+\end{itemize}
 
 
 
