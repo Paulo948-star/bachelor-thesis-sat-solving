@@ -139,104 +139,402 @@ Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solv
 
 \subsubsection{Testgenauigkeit}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{assets/accuracy_donut.png}
+    \caption{Testgenauigkeit der verschiedenen Strategien}
+    \label{fig:accuracy_donut}
+\end{figure}
 
+Was wir in dieser Graphik sehen ist das in 43.8\% der Fälle Satzilla trainier auf Kissat tatstächlich
+den schnellsten und somit besten Solver empfiehlt. 
+
+Dies zeigt uns das selbst bei begrenzten Trainingsdaten (397 Instanzen für 6 Solver) schneidet Satzilla 
+deutlich besser ab als eine zufällige Auswahl.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{assets/vs_random_baseline.png}
+    \caption{Vergleich mit Random Selection}
+    \label{fig:vs_random_baseline}
+\end{figure}
+
+Somit ist die Auswahl von Satzilla für den schnellsten solver um 162\% besser als einen der sechs Solver 
+durch zufallsprinzip auszusuchen.
+
+Satzilla trainiert auf Kissat zeigt das es zuverlässig den schnellsten solver empfehlen kann.
 
 
 \subsection{Top-K-Genauigkeit: Der Wert des „fast Richtigen“}
 
-
-
-
-
-
+Bei der Lösung von SAT-Problemen in der Praxis reicht es oft aus, wenn das Ergebnis nahe am optimalen 
+Lösungsvorschlag liegt. Ein Nutzer kann die ersten k Empfehlungen nacheinander ausprobieren. Daher habe 
+ich auch die Genauigkeit der Top-2- und Top-3-Ergebnisse gemessen – also die Wahrscheinlichkeit, dass 
+der tatsächlich schnellste Lösungsvorschlag unter den ersten k Vorhersagen auftaucht.
 
 
 \subsubsection{Resultate}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{assets/top_k_accuracy_corrected.png}
+    \caption{Vergleich der Top 3 besten Solver}
+    \label{fig:top_k_accuracy_corrected}
+
+    \vspace{10pt}
 
 
+    \includegraphics[width=0.7\textwidth]{assets/prediction_quality_breakdown_corrected.png}
+    \caption{Zusammenfassung der Besten Solver}
+    \label{fig:prediction_quality_breakdown_corrected}
 
+    \vspace{10pt}
+
+
+    \includegraphics[width=0.7\textwidth]{assets/topk_vs_random_corrected.png}
+    \caption{Vergleich der drei besten Solver mit Zufallsprinzip}
+    \label{fig:prediction_quality_breakdown_corrected}
+\end{figure}
+
+\newpage
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{assets/per_solver_topk_accuracy.png}
+    \caption{Für jeden solver Top 3 Vorhersagen}
+    \label{fig:per_solver_topk_accuracy}
+\end{figure}
 
 
 \subsubsection{Interpretation}
 
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item In \textbf{85\% der Testfälle}, befindet sich der Schnellste vorgeschlagene Solver von Satzilla in den \textbf{Top drei Vorhersagen}
+    \item Das bedeutet, dass ein Nutzer, der die drei am häufigsten empfohlenen Solver ausprobiert, in den allermeisten Fällen eine nahezu optimale Leistung erzielen wird
+    \item Selbst wenn Satzilla nicht den absolut schnellsten Solver vorhersagt, \textbf{empfiehlt es so gut wie nie den schlechtesten Solver}
+\end{itemize}
 
+\textbf{Fazit}: Satzilla ist nicht nur besser als Zufallsverfahren, sondern auch praktisch nützlich für die portfoliogestützte SAT-Lösung.
 
-
-
-
-\subsubsection{Kumulative Genauigkeitskurve}
-
-
-
-
-
-
-
+\newpage
 
 \subsection{Feature Importance Analysis}
 
-
-
-
+Für die Interpretierbarkeit ist es wichtig zu verstehen, welche Features die Auswahl des Solvers 
+beeinflussen. Ich haben die Merkmalsbedeutungswerte des trainierten Random-Forest-Modells analysiert.
 
 \subsubsection{Wichtigste Features}
 
+Die analyse der Features zeigt auf, welche Eigenschaften einer Instanz die Auswahlentscheidungen des 
+Satzilla-Lösers am stärksten beeinflussen. Dies ist nicht nur für die Interpretierbarkeit des Modells von
+Bedeutung, sondern auch für das Verständnis, was eine SAT-Instanz für verschiedene 
+Kissat-Konfigurationen „einfach“ oder „schwierig“ macht.
 
+In unserem trainierten Random-Forest-Modell gibt die Feature wichtigkeit an, wie häufig ein Feature bei 
+der Entscheidung über die Aufteilung in allen Bäumen herangezogen wird. Eine höhere Bedeutung 
+bedeutet, dass das Merkmal stark damit korreliert, welcher Solver am schnellsten ist.
 
+In der folgenden Tabelle sind die 15 wichtigsten Features nach ihrem Beitrag zu den Vorhersagen des Modells aufgelistet:
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/feature_importance.png}
+    \caption{Wichtigste Features für die Vorhersagen}
+    \label{fig:feature_importance.png}
+\end{figure}
 
+\newpage
 
-\subsubsection{Konklusion}
+\subsubsection{Was die Features tatsächlich messen}
 
+Um zu verstehen, warum diese Funktionen wichtig sind, fassen wir sie nach Kategorien zusammen:
 
+\textbf{Graph‑Based Features (VCG – Variable‑Clause Graph)}
 
+Der \textbf{Variable-Clause-Graph (VCG)} stellt die SAT-Instanz als zweigeteilten Graphen dar, in dem Variablen 
+und Klauseln Knoten sind und Kanten das Vorkommen von Variablen in Klauseln anzeigen. Aus diesem Graphen 
+abgeleitete Merkmale erfassen die strukturelle Komplexität.
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.3\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+        
+        \textbf{Feature} & \textbf{Was es berechnet} & \textbf{Warum es für die Auswahl des Solvers wichtig ist} \\
+        \toprule
+        VCG-CLAUSE-max & Maximaler Klauselgrad (Anzahl der Variablen, die eine Klausel enthält) & Hohe Werte weisen auf weitreichende Klauseln hin, die sich auf die Ausbreitung und Auflösung auswirken \\
+        \midrule
+        VCG-CLAUSE-coeff-variation & Abweichungen im Grad der Klauseln & Eine ungleichmäßige Verteilung der Klauseln verändert die Art und Weise, wie CDCL-Löser den Suchraum durchlaufen \\
+        \midrule
+        VCG-CLAUSE-entropy & Entropie der Verteilungshäufigkeit von Klauseln & Hhe Entropie → irreguläre Struktur → abweichendes Verhalten des Solvers \\
+        \midrule
+        VCG-CLAUSE-mean & Durchschnittlicher Grad der Klausel & Größere Klauseln erschweren einigen Solvern tendenziell die Berechnung von Instanzen \\
+        \midrule
+        VCG-CLAUSE-min & Mindestgrad der Klausel (Einheitsklauseln) & Einheitsklauseln vereinfachen die Instanz und begünstigen bestimmte Lösungsstrategien \\
+        \bottomrule
+    \end{tabular}
+    \caption{VCG Klausen Features and ihre wichtigkeit}\label{tab:vcg_features}
+\end{table}
 
+\newpage
 
+\textbf{Auswertung}: Features, die sich auf Klausen-Graph beziehen, dominieren die 
+Spitzenplätze (5 Features unter den Top 15). Dies deutet darauf hin, dass die Art und Weise, \textbf{wie sich 
+Satzteile mit Variablen verknüpfen}, der aussagekräftigste Prädiktor dafür ist, welche Kissat-Variante 
+die beste Leistung erbringt.
 
- \subsection{Per-Solver-Leistung}
+\textbf{Preprocessing Features}
 
+Kissat wendet verschiedene Preprocesing an (Variableneliminierung, Subsumption usw.). Die Anzahl der nach
+der Vorverarbeitung verbleibenden Variablen und Klauseln hat einen starken Einfluss auf das Verhalten des 
+Solvers.
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.3\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+        \textbf{Feature} & \textbf{Was es berechnet} & \textbf{Warum es für die Auswahl des Solvers wichtig ist} \\
+        \toprule
+        reducedVars & Nach der Vereinfachung verbleibende Variablen & Einige Varianten sind für reduzierte Formeln optimiert \\
+        \midrule
+        reducedClauses & Nach der Vereinfachung verbleibende Klauseln & Gibt an, inwieweit eine Vereinfachung möglich war \\
+        \bottomrule
+    \end{tabular}
+    \caption{Preprocessing Features and ihre wichtigkeit}\label{tab:preprocessing_features}
+\end{table}
 
+\textbf{Auswertung}: Das Vorhandensein von \textbf{reducedVars} auf Rang 2 bestätigt, dass der Grad der 
+Vereinfachung der Instanz entscheidend ist. Solver wie kissat\_noeliminate verzichten auf Eliminierungen, weshalb 
+sie bei stark reduzierbaren Instanzen eine andere Leistung zeigen.
 
+\textbf{Polarity Features (POSNEG-RATIO-CLAUSE*)}
 
- \subsubsection{Interpretation}
+Diese Features erfassen das Gleichgewicht zwischen positiven und negativen Literalen innerhalb von Sätzen.
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.3\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+        \textbf{Feature} & \textbf{Was es berechnet} & \textbf{Warum es für die Auswahl des Solvers wichtig ist} \\
+        \toprule
+        reducedVarPOSNEG-RATIO-CLAUSE-entropy & Entropie der Polaritätsverteilung & Ausgewogene vs. unausgewogene Polarität beeinflusst Entscheidungsheuristiken \\
+        \midrule
+        POSNEG-RATIO-CLAUSE-coeff-variation & Varianz bei den Polaritätsverhältnissen & Einige Kissat-Varianten weisen polaritätsabhängige Verzweigungen auf \\
+        \midrule
+        POSNEG-RATIO-CLAUSE-mean & Durchschnittliches Polaritätsverhältnis & Stark verzerrte Fälle können bestimmte Heuristiken begünstigen \\
+        \bottomrule
+    \end{tabular}
+    \caption{Preprocessing Features and ihre wichtigkeit}\label{tab:polarity_features}
+\end{table}
 
+\textbf{Auswertung}: Die Polarität von Klauseln wird oft übersehen, doch unsere Ergebnisse zeigen, dass 
+sie zu den fünf wichtigsten Prädiktoren gehört. Verschiedene Kissat-Konfigurationen (z. B. stable vs. default) verwenden 
+unterschiedliche Verzweigungsheuristiken, die auf die Polarität reagieren.
 
+\textbf{Clause Length Distribution (BINARY+, TRINARY+)}
 
+Diese Features zählen Klauseln mit einer bestimmten Länge.
 
- \subsection{Vergleich mit einer zufälligen Referenzlinie}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.3\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+        \textbf{Feature} & \textbf{Was es berechnet} & \textbf{Warum es für die Auswahl des Solvers wichtig ist} \\
+        \toprule
+        BINARY+ & Anteil der binären Klauseln (2 Literale) & Binäre Klauseln ermöglichen eine effiziente Einheitsfortführung \\
+        \midrule
+        TRINARY+ & Anteil der ternären Bedingungen (3 Literale) & Longer clauses increase search space and affect learning \\
+        \bottomrule
+    \end{tabular}
+    \caption{Klausel länge Features and ihre wichtigkeit}\label{tab:länge_features}
+\end{table}
 
+\textbf{Auswertung}: Instanzen mit vielen binären Klauseln verhalten sich anders als solche, die 
+überwiegend lange Klauseln enthalten. Einige Kissat-Varianten sind auf bestimmte Verteilungen der 
+Klausellängen abgestimmt.
 
+\textbf{Basic Size Features (nvarsOrig, nclausesOrig)}
 
+Auch wenn sie nicht die wichtigsten Prädiktoren sind (wie in den Experimenten mit dem Fake-Solver), 
+spielt die Größe der Rohinstanz dennoch eine Rolle.
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.3\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+        \textbf{Feature} & \textbf{Was es berechnet} & \textbf{Warum es für die Auswahl des Solvers wichtig ist} \\
+        \toprule
+        nvarsOrig & Ursprüngliche Anzahl der Variablen & Grobe Annäherung an die Gesamtkomplexität \\
+        \midrule
+        nclausesOrig & Ursprüngliche Anzahl der Klauseln & Legt zusammen mit Variablen die Instanzdichte fest \\
+        \bottomrule
+    \end{tabular}
+    \caption{Basic size Features and ihre wichtigkeit}\label{tab:size_features}
+\end{table}
 
- \subsection{Praktischer Nutzen für die SAT-Lösung}
+\textbf{Auswertung}: Echte Kissat-Solver weisen ein differenzierteres Verhalten auf als einfache 
+Größenschwellenwerte. Dennoch bleibt die Größe ein nützliches Basissignal, das unter den ersten 15 auftaucht.
 
+\subsubsection{Feature Kategorien – Zusammenfassung}
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.2\textwidth}p{0.22\textwidth}p{0.2\textwidth}p{0.35\textwidth}}
+        \toprule
+        \textbf{Kategorie} & \textbf{Features in Top 15} & \textbf{Wichtigkeit (\%)} & \textbf{Wichtige Erkenntnis} \\
+        \midrule
+        Graph (Clause) & 5 & $\sim$8.2 & Das Wichtigste: Die Verknüpfung von Klauseln bestimmt die Unterschiede zwischen den Solvern \\
+        \midrule
+        Preprocessing & 2 & $\sim$3.3 & Entscheidend ist, inwieweit die Instanz die Sache vereinfacht \\
+        \midrule
+        Polarity & 3 & $\sim$4.9 & Das Polaritätsgleichgewicht beeinflusst die Verzweigungsheuristik \\
+        \midrule
+        Clause length & 2 & $\sim$3.1 & Der Unterschied zwischen binären und langen Klauseln ist entscheidend \\
+        \midrule
+        Size & 2 & $\sim$2.6 & Still relevant, but not dominant \\
+        \midrule
+        Local search & 1 & $\sim$1.3 & Liefert ein ergänzendes Härtesignal \\
+        \bottomrule
+    \end{tabular}
+    \caption{Feature Kategorien und ihre wichtigkeit}\label{tab:feature_Kategorien}
+\end{table}
 
+\textbf{Zusammenfassend}: Die Auswahl des Solvers hängt in erster Linie von den \textbf{Eigenschaften des 
+Strukturgraphen ab}, insbesondere von denen, die sich auf die Klauseln beziehen. Vorverarbeitung, 
+Polarität und die Verteilung der Klausellängen liefern wichtige sekundäre Hinweise. Die reine 
+Instanzgröße ist zwar in vereinfachten Szenarien (Fake-Solver) nützlich, stellt bei echten Kissat-Solvern 
+jedoch nur einen von vielen Faktoren dar.
 
+\newpage
 
+\subsection{Per‑Solver Performance}
 
- \subsection{Auswirkungen der Hinzufügung von fehenden LP-Features}
+Nicht alle Solver lassen sich gleichermaßen leicht vorhersagen. Die folgende Tabelle zeigt die Genauigkeit
+der einzelnen Solver im Testdatensatz:
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/per_solver_accuracy.png}
+    \caption{Vorhersagen Genauigkeit nach Solver}
+    \label{fig:per_solver_accuracy.png}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/prediction_distribution.png}
+    \caption{Vorhersagen Korrektheit nach Solver}
+    \label{fig:per_solver_accuracy.png}
+\end{figure}
 
+\newpage
 
+\subsubsection{Interpretation}
 
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Gut repräsentierte Solver} (mit mehr Trainingsinstanzen) erzielen eine höhere Genauigkeit
+    \item kissat\_nostable kommt in 96 Trainingsinstanzen vor → \textbf{74 \% Testgenauigkeit}
+    \item kissat\_stable and kissat\_noeliminate kommen nur in 28 and 39 training instances vor → \textbf{0\% vorhersagen Genauigkeit}
+    \item Dies macht eine \textbf{Einschränkung der Daten} deutlich: Bei insgesamt nur 397 Instanzen verfügen einige Solver über zu wenige Beispiele, als dass das Modell ihr Verhalten zuverlässig erlernen könnte
+\end{itemize}
 
- \subsubsection{Interpretation}
+\textbf{Folgerung}: Eine Vergrößerung des Trainingsdatensatzes würde wahrscheinlich die Genauigkeit 
+verbessern, insbesondere bei unterrepräsentierten Solvern.
 
+\newpage
 
+\subsection{Auswirkungen der Einbindung von LP-Features}
 
+Bei der Feature extraction der einzelnen Benchmarks ist mir aufgefallen das man Features extrahieren konnte 
+die nicht in der Liste von features von rt\_pred.py in Satzilla vorkommen aber denoch im Paper zu Satzilla.
 
- \subsection{Zusammenfassung der wichtigsten Ergebnisse}
+LP\-Features (Features der linearen Programmierung) sind Instanzmerkmale, die sich aus der Lösung einer 
+linearen Programmierungsrelaxation des SAT-Problems ableiten.
 
+Mit den sieben LP-Features - LP\_OBJ, LPSLack-mean, LPSLack-coeff-variation, LPSLack-min, LPSLack-max, lpIntRatio und lpTIME - hatte
+ich dann instesammt alle 138 Features und nicht nur 131 die in rt\_pred aufgelistet sind.
 
+Um zu testen ob die Fehlenden LP\-Features meine vorhersagen verbessern konnten habe ich mein auf Kissat
+trainiertes Satzilla wieder auf die gleichen Instanzen getestet (dieses mal mit 138 Features)
 
+\subsubsection{Ergebnis}
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.3\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+        \textbf{Feature Set} & \textbf{Vorhersage Genauigkeit} \\
+        \toprule
+        131 features (ohne LP) & 43.75\% \\
+        \midrule
+        138 features (+7 LP) & 42.50\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Unterschied der Vorhersage mit LP-Features}\label{tab:lp_features}
+\end{table}
 
- \subsection{Konklusion}
+\subsubsection{Interpretation}
 
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item Die LP\-Features haben die Genauigkeit \textbf{nicht verbessert}, sondern leicht verringert
+    \item Die Features Relevanz der LP-Merkmale lag jeweils unter 0,35 \%
+    \item Die Extraktion von LP-Features ist rechenintensiv.
+\end{itemize}
+
+\textbf{Fazit}: Der Verzicht auf LP-Features (wie im ursprünglichen rt\_pred.py) ist gerechtfertigt. Strukturelle 
+Merkmale reichen für diese Aufgabe aus. Das könnte auch der Grund sein weshalb sie aus der liste von 
+Features ausgeschlossen wurden.
+
+\newpage
+
+\subsection{Zusammenfassung der wichtigsten Ergebnisse}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{p{0.35\textwidth}p{0.6\textwidth}}
+        \textbf{Ergebnis} & \textbf{Resultate} \\
+        \toprule
+        Satzilla pipeline funktioniert & \checkmark 99\%+ Genauigkeit obein fake Solvern \\
+        \midrule
+        Top-1 Genauigkeit (real Kissat) & 43.75\% (besser als zufallsprinzip) \\
+        \midrule
+        Top-3 Genauigkeit & 85\% – äußerst praktisch \\
+        \midrule
+        Wichtigste Features & Structural (VCG, clause ratios) \\
+        \midrule
+        LP features & Nicht von nutzen ($\downarrow$ Genauigkeit, $\uparrow$ Kosten) \\
+        \midrule
+        Data Einschränkung & Mehr instances gebracuht für gewisse Solvers \\
+        \midrule
+        Praktischer Nutzen & Top-3 Predicitons erfolgreich in 85\% der Fälle \\
+        \bottomrule
+    \end{tabular}
+    \caption{Zusammenfassung der Ergebnisse}\label{tab:key_findings}
+\end{table}
+
+\newpage
+
+\subsection{Fazit}
+
+In diesem Kapitel wurde das Satzilla-Framework sowohl anhand künstlicher als auch anhand realer 
+Solver-Daten evaluiert. Die wichtigsten Ergebnisse sind:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Pipeline-Validierung}: Validierung der Pipeline mit künstlichen Solvern (Fake Solver), die die Korrektheit bestätigt.
+    \item \textbf{Training}: Erfolgreiches Training auf sechs echten Kissat-Solvern.
+    \item \textbf{Top-3-Genauigkeit}: 85\%, was den praktischen Nutzen für das portfoliobasierte SAT-Lösen demonstriert.
+    \item \textbf{Feature-Wichtigkeit}: Identifikation struktureller Features als wichtigste Merkmale für die Solver-Auswahl.
+    \item \textbf{LP-Features}: Empirische Rechtfertigung für den Ausschluss von LP-Features aus dem Feature-Set.
+\end{itemize}
+
+Zwar bleibt die genaue Vorhersage des schnellsten Solvers angesichts begrenzter Daten (44 \% Top-1) eine 
+Herausforderung, doch identifiziert Satzilla zuverlässig leistungsstarke Solver unter den 
+Top-3-Empfehlungen. Dies macht es zu einem wertvollen Werkzeug für Nutzer, die es sich leisten 
+können, eine kleine Auswahl an Solvern auszuprobieren, anstatt sich auf eine einzige Standardkonfiguration zu verlassen.
+
+\textbf{Abschließende Aussage:} \textit{Satzilla lernt erfolgreich vorherzusagen, welcher Kissat-Solver für eine gegebene SAT-Instanz voraussichtlich am schnellsten ist. Auch wenn die Vorhersage nicht exakt richtig ist, empfiehlt es konsistent hochwertige Solver und erreicht eine Erfolgsquote von 85\%, wenn die drei besten Vorhersagen berücksichtigt werden.}
