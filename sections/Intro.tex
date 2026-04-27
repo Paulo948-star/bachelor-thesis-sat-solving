@@ -3,39 +3,6 @@
 Das Erfüllbarkeitsproblem der Aussagenlogik (SAT, von englisch satisfabiality "Erfüllbarkeit") ist ein 
 fundamentales Problem der Informatik mit kritischen Anwendungen in Software und Hardware Überprüfung.
 
-\subsection{Conjunctive Normal Form (CNF)}
-
-Bei einer Boolschen Formel, die aus durch UND- und ODER-Operatoren verbunden Variablen 
-besteht, (AND $\land$, OR $\lor$, NOT $\neg$) geht es beim SAT-Problem um die Frage, ob es eine Zuorndung von 
-Warheitswerten zu den Variablen gibt, bei der die gesamte Formel als Wahr ausgewertet wird.
-
-Moderne SAT-Löser arbeiten in der Regel mit Formeln in konjunktiver Normalform (CNF). Eine CNF-Formel 
-besteht aus:
-
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    \item \textbf{Variablen}: Boolesche Variablen (z. B. $x_1$, $x_2$, ..., $x_n$)
-    \item \textbf{Literale}: Eine Variable oder deren Negation (z. B. $x_1$ oder $\neg x_1$)
-    \item \textbf{Klauseln}: Eine Disjunktion (ODER) von Literalen (z. B. $(x_1 \lor \neg x_2 \lor x_3)$)
-    \item \textbf{Formel}: Eine Konjunktion (UND) von Satzteilen (z. B. $(x_1 \lor \neg x_2) \land (\neg x_1 \lor x_3) \land (x_2 \lor \neg x_3)$
-\end{itemize}
-
-Das CNF-Format ist sowohl ausdrucksstark (jede Boolesche Formel lässt sich in CNF umwandeln) als auch für 
-algorithmisches Denken gut geeignet. Das folgende Beispiel zeigt eine einfache CNF-Datei:
-
-\begin{verbatim}
-p cnf 3 4
-1 -2 0
--1 3 0
-2 -3 0
--1 -2 -3 0
-\end{verbatim}
-
-Dies stellt eine Formel mit 3 Variablen und 4 Klauseln dar. Die Zeile „p cnf“ gibt den Problemtyp und die 
-Dimensionen an (3 Variablen, 4 Klauseln), und jede nachfolgende Zeile stellt eine Klausel dar, die mit 0 
-endet.
 
 \newpage
 
@@ -79,6 +46,39 @@ von Solvern gepflegt wird und ein Auswahlmechanismus entscheidet, welcher Solver
 Instanz eingesetzt wird. Die zugrunde liegende Idee ist einfach, aber wirkungsvoll: Wenn wir vorhersagen 
 können, welcher Solver bei einer Instanz die beste Leistung erbringt, können wir erhebliche Rechenzeit 
 einsparen, indem wir Solver mit schlechter Leistung vermeiden.
+
+\subsection{Motivation}
+
+In meinem ürsprunglichen Bachelorprojekt, was mit dieser Bachelorarbeit verknüpft ist, bestannt meine 
+Aufgabe darin Satzilla im jahr 2025 zu wiederholen mit neuen Daten um dann zu vergleichen wie diese 
+neuen vorhersagen mit den Alten aus dem Jahr 2024 übereinstimmen würden.
+
+Dafür bekam ich von meinem Tutor Dr. Mathias Fleury den code von Satilla des Github repos und 400 cnf 
+Dateien aus der enstprechenden webseite.
+
+Die Arbeit war nicht immer einfach und ich hatte mit technischen Problemen zu kämpfen, so fehlten gewisse
+Dateien für die ich an dem Autor der Universität Aachen von Satzilla anschreiben musste. Des weiteren 
+kam mein eigener PC an seine grenzen da er für die benötigten Vorhersagen nicht genug RAM hatte.
+
+Dank der hilfe meiner beiden Tutoren konnte und der Bereitstellung eines PCs meiner Universität mit dem ich
+mich mit einer SSH Verbindung anmelden und benutzen konnte, konnte ich mein Arbeit zuende vollstellen.
+
+Auch wenn das ergebniss meiner Arbeit nicht komplett zufriedenstellend war fand ich die Arbeit und Forschung
+interresant und herausfordernt.
+
+Besonders interresiert hat mich, welche die Predictions waren die mir Satzilla jeweils für meine benchmarks 
+empfohlen hat mit der dazugehörigen Laufzeit. Diese Daten konnte ich dann auswerten.
+
+Für meine Bachelorarbeit, Predicting Kissat Performaance with Satzilla, wurde mir dann die volgenden zwei themen zugeweiesen:
+
+Erstes habe ich getestet ob man Satzilla komplett auf gewissen Kissat Konfigurationen trainiren kann, sprich
+ob sie korrekte predicitons machen. Dafür musste ich als erstes auch testen ob Satzilla überhaupt mit 
+seinem Machine Learning funktioniert da die ergebnisse im meinem Bachelorprojekt zweifel drauf 
+ankommen ließen.
+
+Zweitens habe ich getesten zu welchen ergebnissen man kommt wenn man Satzilla mit kissat trainiert und 
+dann auf preprocessed daten anwendet, einaml die benchmarks auf pre10k vereinfacht und dann auf pre100k 
+vereinfacht, was bis dato niemand zuvor gemacht hat.
 
 
 

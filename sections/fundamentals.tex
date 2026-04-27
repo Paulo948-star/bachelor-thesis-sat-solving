@@ -1,5 +1,43 @@
 \section{\iflanguage{english}{Preliminaries}{Grundlagen}}\label{sec:preliminaries}
 
+In diesem Kapitel beschreibe ich die Grundlagen die für die Späteren Kapitel von bedeutung sein werden.
+Zuerst was CNF Dateien sind un wie sie aufgebaut sind, dann was Kissat und Satzilla sind und wie sie mit 
+Dateien trainiert werden um Predicitons von Solvern zu machen.
+
+\subsection{Conjunctive Normal Form (CNF)}
+
+Bei einer Boolschen Formel, die aus durch UND- und ODER-Operatoren verbunden Variablen 
+besteht, (AND $\land$, OR $\lor$, NOT $\neg$) geht es beim SAT-Problem um die Frage, ob es eine Zuorndung von 
+Warheitswerten zu den Variablen gibt, bei der die gesamte Formel als Wahr ausgewertet wird.
+
+Moderne SAT-Löser arbeiten in der Regel mit Formeln in konjunktiver Normalform (CNF). Eine CNF-Formel 
+besteht aus:
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Variablen}: Boolesche Variablen (z. B. $x_1$, $x_2$, ..., $x_n$)
+    \item \textbf{Literale}: Eine Variable oder deren Negation (z. B. $x_1$ oder $\neg x_1$)
+    \item \textbf{Klauseln}: Eine Disjunktion (ODER) von Literalen (z. B. $(x_1 \lor \neg x_2 \lor x_3)$)
+    \item \textbf{Formel}: Eine Konjunktion (UND) von Satzteilen (z. B. $(x_1 \lor \neg x_2) \land (\neg x_1 \lor x_3) \land (x_2 \lor \neg x_3)$
+\end{itemize}
+
+Das CNF-Format ist sowohl ausdrucksstark (jede Boolesche Formel lässt sich in CNF umwandeln) als auch für 
+algorithmisches Denken gut geeignet. Das folgende Beispiel zeigt eine einfache CNF-Datei:
+
+\begin{verbatim}
+p cnf 3 4
+1 -2 0
+-1 3 0
+2 -3 0
+-1 -2 -3 0
+\end{verbatim}
+
+Dies stellt eine Formel mit 3 Variablen und 4 Klauseln dar. Die Zeile „p cnf“ gibt den Problemtyp und die 
+Dimensionen an (3 Variablen, 4 Klauseln), und jede nachfolgende Zeile stellt eine Klausel dar, die mit 0 
+endet.
+
 \subsection{Kissat}
 
 Kissat ist ein hochmoderner SAT-Löser nach dem Prinzip des Conflict-Driven Clause Learning (CDCL), der 
@@ -144,23 +182,18 @@ konzentriert sich auf die Genauigkeit der Solverauswahl.
 Die gesamte Satzilla-Pipeline besteht aus:
 
 \[
-\begin{tikzcd}
-\text{CNF File} \arrow[r] & \text{Feature Extractor} \arrow[r] & \text{Features} \arrow[d] \\
-& & \text{Trained Model} \arrow[d] \\
-\text{Runtime Data (training)} \arrow[r] & \text{Training} \arrow[r] & \text{Predictions (which solver is fastest)}
-\end{tikzcd}
+\begin{array}{ccc}
+\text{400 CNF Dateien} & & \text{Kissat logs} \\
+\downarrow & & \downarrow \\
+\text{Features extrahieren} & \oplus & \text{Laufzeiten extrahieren} \\
+& \downarrow & \\
+& \text{kissat\_training\_data.csv} & \\
+& \downarrow & \\
+& \text{Satzilla trainieren} & \\
+& \downarrow & \\
+& \text{Vorhersage des besten Solvers} &
+\end{array}
 \]
-
-
-\textbf{1. Training Phase:} Gegeben sei eine Menge von Trainingsinstanzen mit bekannten Laufzeiten für jeden Solver:
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    \item Features aus jeder CNF-Datei extrahieren
-    \item Ermitteln Sie für jede Instanz, welcher Solver am schnellsten war
-    \item Trainieren Sie einen Random-Forest-Klassifikator, um den schnellsten Solver vorherzusagen
-\end{itemize}
 
 \textbf{2. Prediction Phase:} Für eine neue CNF-Datei:
 \begin{itemize}
@@ -174,16 +207,3 @@ Die gesamte Satzilla-Pipeline besteht aus:
 
 \newpage
 
-\subsubsection{Warum Satzilla nach wie vor von Bedeutung ist}
-
-Obwohl Satzilla bereits 2008 eingeführt wurde, sind seine Grundsätze nach wie vor aktuell:
-
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    \item Rechenintensivitätsarme Merkmale (Sekunden pro Instanz) im Vergleich zu rechenintensiven Solver-Läufen (Minuten bis Stunden)
-    \item Einmalige Trainingskosten, die über viele Vorhersagen verteilt abgeschrieben werden
-    \item Transparent und nachvollziehbar (die Merkmalsbedeutung zeigt, worauf es ankommt)
-    \item Anpassbar an neue Solver-Sätze (wie in dieser Arbeit gezeigt)
-\end{itemize}
