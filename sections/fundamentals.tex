@@ -42,42 +42,81 @@ endet.
 
 Kissat ist ein hochmoderner SAT-Löser nach dem Prinzip des Conflict-Driven Clause Learning (CDCL), der 
 von Armin Biere und seiner Forschungsgruppe an der Johannes Kepler Universität Linz entwickelt 
-wurde. Seit seiner ersten Veröffentlichung im Jahr 2020 hat sich Kissat zu einem der erfolgreichsten 
-Löser in den jüngsten SAT-Wettbewerben entwickelt, zahlreiche Medaillen gewonnen und bei einer Vielzahl 
-von Benchmark-Familien eine außergewöhnliche Leistung gezeigt.
+wurde. Der Kissat-SAT-Solver ist eine komprimierte und verbesserte Neuimplementierung von CaDiCaL in C.
+Er verfügt über verbesserte Datenstrukturen, eine optimierte Ablaufplanung der Datenverarbeitung sowie 
+optimierte Algorithmen und Implementierungen.
 
-Der Name „Kissat“ leitet sich vom deutschen Wort „Kissat“ ab (eine spielerische Abwandlung von „kein SAT“)
-und spiegelt die Philosophie des Solvers wider, auf eine saubere und effiziente Implementierung zu 
-setzen. Kissat ist in der Programmiersprache C geschrieben und legt Wert auf Einfachheit, Leistung und 
-Reproduzierbarkeit.
+Kissat belegte den ersten Platz in der Hauptkategorie des SAT-Wettbewerbs 2020 und den ersten Platz 
+bei den unlösbaren Instanzen.
 
 \subsubsection{Kissat Architektur}
 
 Kissat implementiert den CDCL-Algorithmus mit mehreren ausgefeilten Optimierungen:
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{lp{0.6\textwidth}}
-        \toprule
-        \textbf{Komponente} & \textbf{Beschreibung} \\
-        \midrule
-        Variablen Elimination & Entfernt Variablen durch auflösen der Klasuen, vereinfacht dadurch die Formel \\
-        \midrule
-        Ausschluss durch Subsumption & Entfernt Klauseln, die logisch aus anderen abgeleitet werden können \\
-        \midrule
-        Untersuchen & Durchsucht den Suchraum, um Ausbreitungswege zu finden \\
-        \midrule
-        Zwischenspeicherung & Speichert erlernte Informationen und nutzt sie nach einem Neustart wieder \\
-        \midrule
-        Mehrstufige Entscheidungsheuristik & Stellt zuletzt verwendete Variablen in den Vordergrund \\
-        \bottomrule
-    \end{tabular}
-    \caption{Kissat Optimierungen}\label{tab:kissat_optimizations}
-\end{table}
+Kissat ist ein „einfacher und übersichtlicher Bare-Metal-SAT-Löser“, der in C geschrieben ist. Es handelt 
+sich um eine Portierung von CaDiCaL zurück nach C mit verbesserten Datenstrukturen, einer optimierten 
+Ablaufplanung der Datenverarbeitung sowie optimierten Algorithmen und Implementierungen.
+
+\textbf{1. Variblen Elimination}
+
+Die Variableneliminierung ist eine Vorverarbeitungstechnik, die eine SAT-Formel vereinfacht, indem eine 
+Variable und alle Klauseln, die diese enthalten, entfernt werden, während neue Klauseln hinzugefügt werden, 
+die die logische Äquivalenz bewahren.
+
+Die Eliminierung von \(x\) ersetzt alle Klauseln, die \(x\) enthalten, durch die \textbf{Resolventen} zwischen jeder positiven und jeder negativen Klausel:
+
+\[
+(x \lor A) \land (\neg x \lor B) \implies (A \lor B)
+\]
+
+Die Variable \(x\) wird dann aus der Formel entfernt und die neuen Resolventen-Klauseln werden hinzugefügt.
+
+Das ist in dieser Arbeit die wichtigste eigenschaft da weniger Variablen bedeutet eine geringerere 
+Verzweigungsfaktor im CDCL-Suchbaum und durch diese simplifikation kann die Lösung des Problems verschnellert
+werden.
+
+Das Vorhandensein oder Fehlen der Variableneliminierung ist einer der Hauptunterschiede zwischen den 
+Kissat-Konfigurationen, weshalb das Feature „reducedVars“ in unserem Satzilla-Modell als äußerst 
+wichtiges Merkmal auftritt (Figure 7).
+
+\textbf{2. Subsumption Elimination}
+
+Durch Subsumption werden Klauseln entfernt, die sich logisch aus anderen, kürzeren Klauseln ergeben.
+
+Beispiel: Die Klausel \((x \lor y)\) subsumiert \((x \lor y \lor z)\), da letztere immer dann wahr ist, wenn erstere wahr ist.
+
+\textbf{3. Probing (Failed Literal Propagation)}
+
+Untersuchung von Versuchen, Literale zuzuweisen und erzwungene Zuweisungen oder Unerfüllbarkeit zu erkennen.
+
+\textbf{4. Caching (Learned Clause Management)}
+
+Kissat speichert Klauseln und verwendet sie nach einem Neustart erneut, um doppelte Arbeit zu vermeiden.
+
+\textbf{5. Multi‑Level Decision Heuristic}
+
+Die Entscheidungsheuristik legt fest, auf welche Variable und welche Phase als Nächstes verzweigt wird.
+
+\textbf{6. Restart Strategy}
+
+Bei einem Neustart wird der aktuelle Suchzweig verlassen und der Entscheidungsprozess neu gestartet, 
+wobei die erlernten Klauseln beibehalten werden.
+
+\textbf{7. Inprocessing (Intermediate Simplification)}
+
+Inprocessing wendet Vereinfachungstechniken während der gesamten Lösung wiederholt an, nicht nur zu Beginn.
 
 \newpage
 
 \subsubsection{Kissat-Konfigurationsvarianten}
+
+Diese sechs Kissat-Varianten decken die wichtigsten Dimensionen des Konfigurationsraums ab – von 
+minimaler Vorverarbeitung (noeliminate) über Standardverhalten (default) bis hin zu maximaler 
+Stabilisierung (stable, stable2) und alternativen Heuristiken (target2) – und ermöglichen es 
+Satzilla somit, für jede Instanz die passendste Strategie zu erlernen.
+
+Dies ist der Grund weshalb genau diese sechs Kissat Solver für diese Arbeit ausgewählt, da sie am 
+relevantesten sind.
 
 Kissat bietet zahlreiche Konfigurationsoptionen, mit denen sich sein Verhalten anpassen lässt. Die in 
 dieser Arbeit verwendeten Varianten stellen unterschiedliche Kompromisse zwischen dem Aufwand für die 
@@ -86,23 +125,22 @@ Vorverarbeitung und der Rechengeschwindigkeit dar:
 \begin{table}[htbp]
     \centering
     \begin{tabular}{lp{0.6\textwidth}}
-        \toprule
         \textbf{Variante} & \textbf{Haupteigenschaften} \\
-        \midrule
+        \toprule
         kissat\_default & Standardkonfiguration mit ausgewogenen Einstellungen \\
         \midrule
-        kissat\_noeliminate & Deaktiviert die Variableneliminierung (schnellere Vorverarbeitung, möglicherweise langsamere Lösung) \\
+        kissat\_noeliminate & Deaktiviert die Variableneliminierung \\
         \midrule
-        kissat\_nostable & Deaktiviert den stabilen Modus (abweichende Strategie zur Variablenauswahl) \\
+        kissat\_nostable & Deaktiviert den stabilen Modus \\
         \midrule
-        kissat\_stable & Aktiviert den stabilen Modus für eine systematischere Suche \\
+        kissat\_stable & Aktiviert den stabilen Modus für eine Suche \\
         \midrule
         kissat\_stable2 & Erweiterter Stabilitätsmodus mit zusätzlichen Heuristiken \\
         \midrule
         kissat\_target2 & Optimiert für eine bestimmte Problemklasse \\
         \bottomrule
     \end{tabular}
-    \caption{Kissat-Konfigurationsvarianten}\label{tab:kissat_variants}
+    \caption{Kissat-Konfigurationsvarianten für diese Arbeit}\label{tab:kissat_variants}
 \end{table}
 
 \subsubsection{Messung der Solver-Leistung}
@@ -111,7 +149,8 @@ Die Leistung eines Solvers wird in der Regel anhand der Gesamtlaufzeit oder der 
 dieser Arbeit verwende ich die vom Feld „process-time“ von Kissat gemeldete Laufzeit, die die zur Lösung 
 der Instanz aufgewendeten CPU-Sekunden angibt. Zeitüberschreitungen (z. B. 3600 Sekunden, 7200 Sekunden) 
 deuten darauf hin, dass der Solver die Berechnung nicht innerhalb der zugewiesenen Zeit abgeschlossen hat.
-
+Daraus schließt man das das Problem unsatisfiable ist, sprich der solver konnte dafür keine Lösung finden 
+die das Problem erfüllen könnte.
 
 \subsection{Satzilla}
 
@@ -128,6 +167,7 @@ Satzilla extrahiert aus jeder CNF-Formel über 100 Merkmale, die in mehrere Kate
 
 \begin{table}[htbp]
     \centering
+    \small
     \begin{tabular}{lp{0.3\textwidth}p{0.4\textwidth}}
         \toprule
         \textbf{Kategorie} & \textbf{Features} & \textbf{Was sie messen} \\
@@ -195,15 +235,14 @@ Die gesamte Satzilla-Pipeline besteht aus:
 \end{array}
 \]
 
-\textbf{2. Prediction Phase:} Für eine neue CNF-Datei:
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \setlength{\parskip}{0pt}
-    \setlength{\parsep}{0pt}
-    \item Die gleichen Features extrahieren
-    \item Wende das trainierte Modell an, um den schnellsten Solver vorherzusagen
-    \item Führen Sie nur diesen Solver aus (das spart Zeit)
-\end{itemize}
+Mithilfe des SAT-Features-Extraktors habe ich 139 Features aus 400 CNF-Benchmarks extrahiert. Unabhängig 
+davon habe ich die Protokolle des Kissat-Lösers ausgewertet, um die genauen Laufzeiten für sechs 
+Lösungsvarianten bei denselben Instanzen zu ermitteln. 
+
+Nachdem ich die Merkmals- und Laufzeitdaten über eine Namenszuordnung abgeglichen hatten, identifizierte 
+ich dann den schnellsten Solver pro Instanz und trainierten einen Random-Forest-Klassifikator. 
+Daraus entstand ein Satzilla-Modell, das anhand der Merkmale einer neuen Instanz vorhersagt, welcher 
+Kissat-Solver die beste Leistung erbringen wird.
 
 \newpage
 

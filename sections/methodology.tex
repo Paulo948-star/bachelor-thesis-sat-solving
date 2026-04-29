@@ -58,6 +58,9 @@ Genauigkeit der Ergebnisse der Fake Solver:
     \caption{Testergebnisse für verschiedene Auswahlstrategien}\label{tab:test_results}
 \end{table}
 
+Eine Genauigkeit von 99 \% bedeutet, dass Satzilla in 99 von 100 Fällen den schnellsten Fake Solver 
+korrekt identifiziert, was beweist, dass die Merkmalsextraktion und das Training einwandfrei funktionieren.
+
 \newpage
 
 Wichtigste Features der Fake Solver:
@@ -78,6 +81,8 @@ Wichtigste Features der Fake Solver:
     \caption{Testergebnisse der wichtigsten Features}\label{tab:feature_results}
 \end{table}
 
+Je höher der Prozentsatz des Features ist, desto stärker stützt sich das Modell bei seinen Vorhersagen 
+auf dieses Feature.
 
 \subsubsection{Interpretation}
 
@@ -99,7 +104,7 @@ Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests bestätigte, dass:
 
 
 
-\subsection{Trainieren auf echten Kissat Solvern}
+\subsection{Trainieren auf echten Kissat Solver Daten}
 
 Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solvers trainiert:
 
@@ -274,7 +279,7 @@ abgeleitete Merkmale erfassen die strukturelle Komplexität.
         \midrule
         VCG-CLAUSE-coeff-variation & Abweichungen im Grad der Klauseln & Eine ungleichmäßige Verteilung der Klauseln verändert die Art und Weise, wie CDCL-Löser den Suchraum durchlaufen \\
         \midrule
-        VCG-CLAUSE-entropy & Entropie der Verteilungshäufigkeit von Klauseln & Hhe Entropie → irreguläre Struktur → abweichendes Verhalten des Solvers \\
+        VCG-CLAUSE-entropy & Entropie der Verteilungshäufigkeit von Klauseln & Hohe Entropie → irreguläre Struktur → abweichendes Verhalten des Solvers \\
         \midrule
         VCG-CLAUSE-mean & Durchschnittlicher Grad der Klausel & Größere Klauseln erschweren einigen Solvern tendenziell die Berechnung von Instanzen \\
         \midrule
@@ -293,7 +298,7 @@ die beste Leistung erbringt.
 
 \textbf{Preprocessing Features}
 
-Kissat wendet verschiedene Preprocesing an (Variableneliminierung, Subsumption usw.). Die Anzahl der nach
+Kissat wendet verschiedene Inprocesing an (Variableneliminierung, Subsumption usw.). Die Anzahl der nach
 der Vorverarbeitung verbleibenden Variablen und Klauseln hat einen starken Einfluss auf das Verhalten des 
 Solvers.
 
@@ -333,9 +338,9 @@ Diese Features erfassen das Gleichgewicht zwischen positiven und negativen Liter
     \caption{Preprocessing Features and ihre wichtigkeit}\label{tab:polarity_features}
 \end{table}
 
-\textbf{Auswertung}: Die Polarität von Klauseln wird oft übersehen, doch unsere Ergebnisse zeigen, dass 
-sie zu den fünf wichtigsten Prädiktoren gehört. Verschiedene Kissat-Konfigurationen (z. B. stable vs. default) verwenden 
-unterschiedliche Verzweigungsheuristiken, die auf die Polarität reagieren.
+\textbf{Auswertung}: Die Polaritätsfeatures zählen zu den zehn wichtigsten Merkmalen. Sie erfassen das 
+Verhältnis von positiven und negativen Literalen innerhalb von Klauseln, was sich auf die Verzweigungsheuristiken 
+und die Leistung des Solvers auswirkt.
 
 \textbf{Clause Length Distribution (BINARY+, TRINARY+)}
 
@@ -348,7 +353,7 @@ Diese Features zählen Klauseln mit einer bestimmten Länge.
         \toprule
         BINARY+ & Anteil der binären Klauseln (2 Literale) & Binäre Klauseln ermöglichen eine effiziente Einheitsfortführung \\
         \midrule
-        TRINARY+ & Anteil der ternären Bedingungen (3 Literale) & Longer clauses increase search space and affect learning \\
+        TRINARY+ & Anteil der ternären Bedingungen (3 Literale) & Längere Klauseln vergrößern den Suchraum und beeinflussen den Lernprozess \\
         \bottomrule
     \end{tabular}
     \caption{Klausel länge Features and ihre wichtigkeit}\label{tab:länge_features}
@@ -376,8 +381,9 @@ spielt die Größe der Rohinstanz dennoch eine Rolle.
     \caption{Basic size Features and ihre wichtigkeit}\label{tab:size_features}
 \end{table}
 
-\textbf{Auswertung}: Echte Kissat-Solver weisen ein differenzierteres Verhalten auf als einfache 
-Größenschwellenwerte. Dennoch bleibt die Größe ein nützliches Basissignal, das unter den ersten 15 auftaucht.
+\textbf{Auswertung}: Basic Size Features erfassen die ursprüngliche Größe einer SAT-Instanz; sie bieten 
+einen groben Anhaltspunkt für die Komplexität und die Eignung des Solvers und liefern einen bescheidenen, 
+aber aussagekräftigen Beitrag zu den Entscheidungen des Modells.
 
 \subsubsection{Feature Kategorien – Zusammenfassung}
 
@@ -497,28 +503,13 @@ Features ausgeschlossen wurden.
 
 \subsection{Zusammenfassung der wichtigsten Ergebnisse}
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{p{0.35\textwidth}p{0.6\textwidth}}
-        \textbf{Ergebnis} & \textbf{Resultate} \\
-        \toprule
-        Satzilla pipeline funktioniert & \checkmark 99\%+ Genauigkeit obein fake Solvern \\
-        \midrule
-        Top-1 Genauigkeit (real Kissat) & 43.75\% (besser als zufallsprinzip) \\
-        \midrule
-        Top-3 Genauigkeit & 85\% – äußerst praktisch \\
-        \midrule
-        Wichtigste Features & Structural (VCG, clause ratios) \\
-        \midrule
-        LP features & Nicht von nutzen ($\downarrow$ Genauigkeit, $\uparrow$ Kosten) \\
-        \midrule
-        Data Einschränkung & Mehr instances gebracuht für gewisse Solvers \\
-        \midrule
-        Praktischer Nutzen & Top-3 Predicitons erfolgreich in 85\% der Fälle \\
-        \bottomrule
-    \end{tabular}
-    \caption{Zusammenfassung der Ergebnisse}\label{tab:key_findings}
-\end{table}
+Die Satzilla-Pipeline funktioniert mit einer Genauigkeit von über 99\% bei künstlichen Solvern (Fake Solvern). 
+
+Bei realen Kissat-Solvern erreicht Satzilla eine Top-1-Genauigkeit von 43,75\%, was besser ist als das Zufallsprinzip. Besonders bemerkenswert ist die Top-3-Genauigkeit von 85\%, die einen äußerst praktischen Nutzen für die SAT-Lösung bietet. 
+
+Als wichtigste Features für die Solver-Auswahl wurden strukturelle Merkmale (VCG, clause ratios) identifiziert. LP-Features erwiesen sich hingegen als nicht nutzbringend, da sie die Genauigkeit verringern und die Kosten erhöhen. 
+
+Eine Einschränkung der Datenlage besteht darin, dass für bestimmte Solver mehr Instanzen benötigt werden. Insgesamt sind die Top-3-Vorhersagen von Satzilla in 85\% der Fälle erfolgreich.
 
 \newpage
 
