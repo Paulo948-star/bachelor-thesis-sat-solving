@@ -5,7 +5,8 @@ Algorithmusauswahl und der Vorverarbeitung durch SATZilla auf verschiedene Varia
 vorgestellt.
 
 Die Idee hier ist zu testen was Passiert wenn man Satzilla, wieder Trainiert auf unseren Kissat variationen, 
-nicht auf die ursprünglichen Benchamrks sondern auf die gleichen Benchmarks in vereinfachter form.
+nicht auf die ursprünglichen Benchamrks testet sondern auf die gleichen Benchmarks in vereinfachter form,
+welche Predicitons werden dann gemacht?
 
 In realen SAT-Lösungsabläufen wird vor der Lösung üblicherweise eine Vorverarbeitung durchgeführt. 
 Vorverarbeitungstechniken wie Variableneliminierung, Subsumption und Äquivalenzschluss vereinfachen 
@@ -16,11 +17,14 @@ strukturellen Eigenschaften der Formel, auf deren Erfassung die Funktionen von S
 Die Forschungslücke: Der ursprüngliche Featuresextraktor und Algorithmusauswähler von SATZilla wurden 
 anhand von ursprünglichen, unverarbeiteten Benchmarks entwickelt und evaluiert. Es ist nicht bekannt, ob 
 die Vorhersagen von SATZilla auch dann gültig bleiben, wenn sie auf vorverarbeitete Formeln angewendet 
-werden. Dies führt zu einem praktischen Problem:
+werden.
 
-\textit{Wenn ein Benutzer seine SAT-Instanz vor dem Ausführen eines Solvers vorverarbeitet, kann er dann 
-dennoch der Solver-Empfehlung von SATZilla vertrauen, oder macht die Vorverarbeitung die Merkmale 
-und damit die Vorhersage ungültig?}
+SATZilla führt selber preprocessing aus. Wenn man diesen Trivialen entfernt und SATZilla sich auf den 
+harten Teil fokussieren kann sollte meine Hoffnung sein das die Predicitons dann besser werden und 
+meiner Einschätzung nach sich mehr verändert bei $0\rightarrow10k$ als bei $10k\rightarrow100k$, weil am 
+Anfang mehr Teile wegfallen.
+
+\textit{Führt eine Vereinfachung der Benchmarks zu besseren vorhersagen?}
 
 Hierführ bekam ich von meinem Tutor zwei neue Dateien mit den Namen: \textbf{sc2024pre10k} und 
 \textbf{sc2024pre100k}, wobei 10k \& 100k jeweils für eine Vereinfachung von 10.000 und 100.000 fur die 
@@ -36,6 +40,9 @@ Zum Schluss werde ich untersuchen ob die Laufzeiten von den vereinfachten Benmch
 
 \textbf{Training Data:}
 \begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
     \item 400 SAT benchmarks aus der SAT Wettbewerb
     \item 6 Kissat Solver varianten:
 \end{itemize}
@@ -53,7 +60,7 @@ Zum Schluss werde ich untersuchen ob die Laufzeiten von den vereinfachten Benmch
     \item Laufzeit Data aus kissat-strategy-runs.tar.xz
 \end{itemize}
 
-\textbf{Test Data}
+\textbf{Test Data:}
 \begin{itemize}
     \item 324 gemeinsame Instanzen der drei Versionen:
 \end{itemize}
@@ -65,8 +72,6 @@ Zum Schluss werde ich untersuchen ob die Laufzeiten von den vereinfachten Benmch
 \end{quote}
 
 \subsubsection{Feature Extraction Process}
-
-Der Grund für die 324 gemeinsamen Instanzen liegt am Featuresextraktor.
 
 Die Features  wurden mit dem SATZilla 2024-Featurextraktor extrahiert, wobei pro Merkmalsgruppe ein 
 Zeitlimit von 180 Sekunden galt. Der Featuresextraktor Prozess umfasste:
@@ -93,12 +98,14 @@ Zeitlimit von 180 Sekunden galt. Der Featuresextraktor Prozess umfasste:
 Während der Vorverarbeitung (Vereinfachung) wurden einige Testfälle bereits vollständig gelöst 
 (SAT/UNSAT ermittelt), noch bevor der Solver überhaupt gestartet war.
 
+Bedeutet der Featuresextraktor konnte gar keine CNF Datei extrahieren da diese bereits gelöst war.
+
 Durch stärkere Vereinfachung wurden auch mehr Benchmarks gelöst, so wurden von Pre10k 52 der benchmarks 
 beretis gelöst und 76 Benchamrks von Pre100k.
 
-Somit haben wir letztendlich 324 gemeinsame Benchmarks zum vergleichen.
+Somit hatte ich letztendlich 324 gemeinsame Benchmarks zum vergleichen.
 
-\newpage
+
 
 \subsubsection{SATZilla Model Training}
 
@@ -169,19 +176,15 @@ so das man immer noch eine gewisse ähnlichkeit erkennen kann vor jeder Vereinfa
 
 Die Verschiebung der Verteilung zeigt, dass die Vorverarbeitung nicht alle Solver gleichermaßen 
 beeinflusst. kissat\_nostable erwies sich nach der Vorverarbeitung als die vorherrschende 
-Empfehlung (50,2 \%), während kissat\_stable fast nie empfohlen wurde (0,3 \%). Dies deutet darauf hin, 
-dass die Heuristik der stabilen Phase, die bei ursprünglichen Formeln von Vorteil ist, ihren Vorteil 
-bei vereinfachten Formeln verliert. Umgekehrt scheint die nostable-Konfiguration, die die stabile 
-Phase deaktiviert, für vorverarbeitete Instanzen besonders gut geeignet zu sein.
+Empfehlung (50,2 \%), während kissat\_stable fast nie empfohlen wurde (0,3 \%). 
 
 \textbf{Verteilung der Solver-Auswahl (\%)}
 
 \begin{table}[H]
     \centering
     \begin{tabular}{lccc}
-        \toprule
         \textbf{Solver} & \textbf{Original} & \textbf{Pre10k} & \textbf{Pre100k} \\
-        \midrule
+        \toprule
         kissat\_nostable & 31.9\% & 55.1\% & 50.2\% \\
         \midrule
         kissat\_stable2 & 29.1\% & 22.6\% & 27.9\% \\
@@ -218,9 +221,8 @@ anfänglichen Vereinfachung auftritt.
 \begin{table}[H]
     \centering
     \begin{tabular}{lcc}
-        \toprule
         \textbf{Vergleich} & \textbf{Geänderte Instanzen} & \textbf{Prozentsatz} \\
-        \midrule
+        \toprule
         Original $\rightarrow$ Pre10k & 119 von 323 & 36,8\% \\
         \midrule
         Original $\rightarrow$ Pre100k & 134 von 323 & 41,5\% \\
@@ -279,9 +281,8 @@ Die häufigsten Änderungen (Original $\rightarrow$ Pre10k):
 \begin{table}[H]
     \centering
     \begin{tabular}{lccp{0.4\textwidth}}
-        \toprule
         \textbf{Änderung} & \textbf{Anzahl} & \textbf{Bedeutung} \\
-        \midrule
+        \toprule
         stable2 $\rightarrow$ nostable & 28 & SATZilla wechselte von der Empfehlung stable2 zu nostable \\
         \midrule
         default $\rightarrow$ nostable & 15 & SATZilla wechselte von default zu nostable \\
@@ -457,7 +458,7 @@ Was uns diese unterschiede sagen:
     \item POSNEG-RATIO-VAR-stdev verliert bei Pre100k an Bedeutung. Die Variabilität der Verhältnisse zwischen positiven und negativen Literalen über die Variablen hinweg verliert nach einer umfassenden Vorverarbeitung an Aussagekraft, möglicherweise weil diese Verhältnisse durch die Vorverarbeitung ausgeglichen werden.
 \end{itemize}
 
-\subsection{Fazit}
+\subsubsection{Fazit}
 
 Die Analyse der Featuressbedeutung zeigt, dass sowohl bei leicht als auch bei stark vorverarbeiteten 
 Benchmarks dieselben strukturellen Eigenschaften die Auswahl des Solvers bestimmen. Merkmale der 
@@ -470,4 +471,193 @@ Variablen eliminiert und einheitlichere Verteilungen der unbeschränkten Variabl
 
 Diese Ergebnisse bestätigen die Robustheit des Merkmalsatzes von SATZilla über verschiedene 
 Vorverarbeitungsstufen hinweg.
+
+\newpage
+
+\subsection{Laufzeitvergleich Pre10k vs. Pre100k}
+
+Im Rahmen der Experimente habe ich untersucht, wie sich unterschiedliche Grade der Vorverarbeitung 
+(Preprocessing) auf die Gesamtlösungszeit von SAT-Instanzen auswirken. Dabei habe ich vollständige 
+Lösungszeit (Full Runtime) mit der kombinierten Zeit aus Vorverarbeitung (Preprocessing Time) und 
+verbleibender Lösungszeit (Remaining Runtime) verglichen. Die Laufzeiten bekam ich als Dateien von 
+meinem Tutor der die jeweiligen Benchmarks mit SATzilla verglichen hat.
+
+\textbf{Verglichen wurden drei Szenarien}:
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Keine Vorverarbeitung}: Vollständige Lösung von Grund auf (Full Runtime)
+    \item \textbf{Pre10k}: 10.000 Simplifikationsschritte + verbleibende Lösungszeit
+    \item \textbf{Pre100k}: 100.000 Simplifikationsschritte + verbleibende Lösungszeit
+\end{itemize}
+
+\textbf{Datenquellen}:
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \item \textbf{Full Runtimes}: kissat-runs-100k-according-to-satzilla.tar.xz (323 Benchmarks)
+    \item \textbf{Pre10k-Daten}: sc2024pre10k.zip und kissat-runs-10k-according-to-satzilla.tar.xz (313 gemeinsame Benchmarks)
+    \item \textbf{Pre100k-Daten}: sc2024pre100k.zip und kissat-runs-100k-according-to-satzilla.tar.xz (303 gemeinsame Benchmarks)
+\end{itemize}
+
+\subsubsection{Ergebnisse Pre10k (10.000 Simplifikationsschritte)}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lc}
+        \textbf{Kennzahl} & \textbf{Wert} \\
+        \toprule
+        Anzahl Benchmarks & 313 \\
+        \midrule
+        Durchschnittliche Full Runtime & 1241,55 Sekunden ($\sim$20,7 Minuten) \\
+        \midrule
+        Durchschnittliche Preprocessing-Zeit & 1,40 Sekunden \\
+        \midrule
+        Durchschnittliche verbleibende Zeit & 1570,84 Sekunden ($\sim$26,2 Minuten) \\
+        \midrule
+        Durchschnittliche kombinierte Zeit & 1572,24 Sekunden ($\sim$26,2 Minuten) \\
+        \midrule
+        Durchschnittliche Verbesserung & $-330,69$ Sekunden ($-3619,3\%$) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Zeitvergleich: Full Runtime vs. Preprocessing + Lösung}\label{tab:time_comparison}
+\end{table}
+
+Mit der Vereinfachung von Pre10k waren letzendlich 164 Benchmarks (52,4\%) schneller zu lösen und 
+149 (47,6\%) waren langsamer.
+
+\textbf{Beste Verbesserungen (Beispiele)}:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccr}
+        \toprule
+        \textbf{Benchmark} & \textbf{Full Runtime} & \textbf{Kombinierte Zeit} & \textbf{Verbesserung} \\
+        \midrule
+        pcmax-scheduling-UNSAT & 566,05s & 0,12s & +100,0\% \\
+        \midrule
+        Ptn-7824-b18 & 1303,71s & 12,09s & +99,1\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Beispiele für beste Verbesserungen durch Preprocessing}\label{tab:best_improvements}
+\end{table}
+
+\textbf{Schlechteste Verschlechterungen (Beispiele)}:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccr}
+        \toprule
+        \textbf{Benchmark} & \textbf{Full Runtime} & \textbf{Kombinierte Zeit} & \textbf{Verschlechterung} \\
+        \midrule
+        1-ZC-512-K-60 & 0,05s & 341,63s & $-683.160\%$ \\
+        \midrule
+        1-ET-512-K-96 & 5,44s & 5000,23s & $-91.816\%$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Beispiele für schlechteste Verschlechterungen durch Preprocessing}\label{tab:worst_degradations}
+\end{table}
+
+\subsubsection{Ergebnisse Pre100k (100.000 Simplifikationsschritte)}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Kennzahl} & \textbf{Wert} \\
+        \midrule
+        Anzahl Benchmarks & 303 \\
+        \midrule
+        Durchschnittliche Full Runtime & 1252,69 Sekunden ($\sim$20,9 Minuten) \\
+        \midrule
+        Durchschnittliche Preprocessing-Zeit & 2,17 Sekunden \\
+        \midrule
+        Durchschnittliche verbleibende Zeit & 1576,17 Sekunden ($\sim$26,3 Minuten) \\
+        \midrule
+        Durchschnittliche kombinierte Zeit & 1578,34 Sekunden ($\sim$26,3 Minuten) \\
+        \midrule
+        Durchschnittliche Verbesserung & $-325,65$ Sekunden ($-186,8\%$) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Zeitvergleich: Full Runtime vs. Preprocessing + Lösung (Pre100k)}\label{tab:time_comparison_pre100k}
+\end{table}
+
+Bei der Vereinfachung von pre100k liegt die Verteilung bei 161 Benchamrks die sich verbessert habe (53,1\%)
+wohingegen 142 Benchmarks sich verschlechtert habe (46,9\%)
+
+\textbf{Beste Verbesserungen (Bispiele)}:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccr}
+        \toprule
+        \textbf{Benchmark} & \textbf{Full Runtime} & \textbf{Kombinierte Zeit} & \textbf{Verbesserung} \\
+        \midrule
+        Ptn-7824-b18 & 1303,71s & 4,70s & +99,6\% \\
+        \midrule
+        battleship-14-26-sat & 2,01s & 0,08s & +96,0\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Beispiele für beste Verbesserungen durch Preprocessing (Pre100k)}\label{tab:best_improvements_pre100k}
+\end{table}
+
+\textbf{Schlechteste Verschlechterungen (Beispiele)}:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccr}
+        \toprule
+        \textbf{Benchmark} & \textbf{Full Runtime} & \textbf{Kombinierte Zeit} & \textbf{Verschlechterung} \\
+        \midrule
+        EDP3-11000 & 43,22s & 5001,21s & $-11.471\%$ \\
+        \midrule
+        g2-slp-synthesis-aes-top30 & 35,85s & 3610,10s & $-9.970\%$ \\
+        \bottomrule
+    \end{tabular}
+    \caption{Beispiele für schlechteste Verschlechterungen durch Preprocessing (Pre100k)}\label{tab:worst_degradations_pre100k}
+\end{table}
+
+\subsubsection{Wichtige Erkenntnisse}
+
+\begin{itemize}
+    \setlength{\itemsep}{2pt}
+    \item \textbf{Preprocessing-Zeit}: Pre100k benötigt im Durchschnitt 0,77 Sekunden mehr Vorverarbeitungszeit als Pre10k (2,17s vs. 1,40s). Dies ist erwartungsgemäß, da mehr Simplifikationsschritte durchgeführt werden.
+    
+    \item \textbf{Verbleibende Lösungszeit}: Pre100k hat eine minimal höhere verbleibende Lösungszeit (+5,33 Sekunden im Durchschnitt). Dies könnte darauf hindeuten, dass aggressiveres Preprocessing nicht immer zu einer einfacheren Formel führt.
+    
+    \item \textbf{Gesamtleistung}: Beide Preprocessing-Stufen schneiden im Durchschnitt schlechter ab als die vollständige Lösung ohne Vorverarbeitung (negative durchschnittliche Verbesserung). Dies ist auf extreme Ausreißer zurückzuführen, bei denen das Preprocessing zu einer massiven Verschlechterung führt.
+    
+    \item \textbf{Erfolgsrate}: Pre100k hat eine leicht höhere Erfolgsrate (53,1\% schneller vs. 52,4\%). Der Unterschied ist jedoch minimal.
+    
+    \item \textbf{Extreme Fälle}: Beide Stufen zeigen ähnliche Muster bei extremen Verbesserungen und Verschlechterungen. Besonders auffällig sind Fälle wie \texttt{1-ZC-512-K-60}, bei dem Pre10k die Lösungszeit von 0,05 Sekunden auf 341,63 Sekunden verlängert.
+\end{itemize}
+
+\subsubsection{Interpretation}
+
+\textbf{Warum ist die durchschnittliche Verbesserung negativ?}
+
+Die negativen Durchschnittswerte (Pre10k: -3619\%, Pre100k: -186,8\%) sind nicht als wörtliche 
+prozentuale Verbesserungen zu interpretieren. Sie entstehen durch extreme Ausreißer, bei denen sehr 
+kurze Full Runtimes (unter 1 Sekunde) durch Preprocessing auf Zeiten um 5000 Sekunden ansteigen. 
+Diese Ausreißer verzerren den Durchschnitt stark.
+
+\textbf{Beispiel}: 1-ZC-512-K-60 (Full Runtime: 0,05s → Pre10k: 341,63s) allein verursacht eine 
+scheinbare Verschlechterung von über 600.000\%.
+
+Somit soll man Preprocessing nicht als Allheilmittel betrachten, da es in etwas der Hälfte der Fälle 
+die bearbeitungszeit verschlechtert. Des weiteren sieht man das es keinen großen Unterschied macht wie stark man 
+die Benchamrks vereinfacht. Preprocessing sollte man meiner Meinung dann nur anwenden auf Benchmarks 
+für die es tatsächlich auch wirkt.
+
+\subsubsection{Fazit}
+
+Die Untersuchung zeigt, dass sowohl Pre10k (10.000 Simplifikationsschritte) als auch Pre100k (100.000 Simplifikationsschritte) 
+in etwa der Hälfte der Fälle (52-53\%) zu einer Beschleunigung der Lösungszeit führen. Die 
+durchschnittliche Preprocessing-Zeit ist mit 1,4 bis 2,2 Sekunden vernachlässigbar gering. Allerdings 
+kann Preprocessing in einigen Fällen zu extremen Verlangsamungen führen (bis zu Faktor 10.000), was 
+die durchschnittliche Verbesserung verzerrt. Ein signifikanter Vorteil von Pre100k gegenüber Pre10k 
+konnte ich daher nicht festgestellen. Für die praktische Anwendung wird daher eine selektive, 
+instanzabhängige Aktivierung des Preprocessings empfohlen.
+
+
+
+
 

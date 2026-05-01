@@ -35,6 +35,7 @@ definieren: Für jede Instanz wussten ich genau, welcher Solver als der schnells
     \item \textbf{4-Solver-Test}: Zwei Solver basieren auf der Variablenanzahl und zwei auf der Klauselanzahl, wobei eine klare Hierarchie besteht (Variablenspezialisten dominieren).
 \end{itemize}
 
+\newpage
 
 \subsubsection{Resultate}
 
@@ -61,7 +62,7 @@ Genauigkeit der Ergebnisse der Fake Solver:
 Eine Genauigkeit von 99 \% bedeutet, dass Satzilla in 99 von 100 Fällen den schnellsten Fake Solver 
 korrekt identifiziert, was beweist, dass die Merkmalsextraktion und das Training einwandfrei funktionieren.
 
-\newpage
+
 
 Wichtigste Features der Fake Solver:
 
@@ -87,7 +88,7 @@ auf dieses Feature.
 \subsubsection{Interpretation}
 
 
-Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests bestätigte, dass:
+Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests und die Auswahl der Features bestätigte, dass:
 
 \begin{itemize}
     \setlength{\itemsep}{0pt}
@@ -101,7 +102,7 @@ Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests bestätigte, dass:
 \textbf{Fazit}: Die Satzilla-Pipeline funktioniert einwandfrei und ist bereit für das Training mit echten Solver-Daten.
 
 
-
+\newpage
 
 
 \subsection{Trainieren auf echten Kissat Solver Daten}
@@ -175,6 +176,7 @@ durch zufallsprinzip auszusuchen.
 
 Satzilla trainiert auf Kissat zeigt das es zuverlässig den schnellsten solver empfehlen kann.
 
+\newpage
 
 \subsection{Top-K-Genauigkeit: Der Wert des „fast Richtigen“}
 
@@ -217,7 +219,7 @@ der tatsächlich schnellste Lösungsvorschlag unter den ersten k Vorhersagen auf
 \end{figure}
 
 
-\subsubsection{Interpretation}
+\subsubsection{Interpretation – Zeitlicher Vorteil gegenüber dem Standard-Solver}
 
 \begin{itemize}
     \setlength{\itemsep}{0pt}
@@ -228,7 +230,52 @@ der tatsächlich schnellste Lösungsvorschlag unter den ersten k Vorhersagen auf
     \item Selbst wenn Satzilla nicht den absolut schnellsten Solver vorhersagt, \textbf{empfiehlt es so gut wie nie den schlechtesten Solver}
 \end{itemize}
 
-\textbf{Fazit}: Satzilla ist nicht nur besser als Zufallsverfahren, sondern auch praktisch nützlich für die portfoliogestützte SAT-Lösung.
+Um den praktischen Nutzen von Satzilla zu quantifizieren, vergleichen wir die vorhergesagte Laufzeit des 
+empfohlenen Solvers mit der Laufzeit des kissat\_default-Solvers auf den 80 Testinstanzen.
+
+\textbf{Berechnungsgrundlage}
+
+Für jede Testinstanz gilt:
+\begin{itemize}
+    \item $t_{\text{default}}$ = Laufzeit von kissat\_default (Sekunden)
+    \item $t_{\text{satzilla}}$ = Laufzeit des von Satzilla als schnellsten vorhergesagten Solvers
+\end{itemize}
+
+Der Geschwindigkeitsvorteil berechnet sich als:
+\[
+\text{Speedup} = \frac{t_{\text{default}}}{t_{\text{satzilla}}}
+\]
+
+Ein Speedup von $>1{,}0$ bedeutet: Satzillas Empfehlung ist schneller als der Standard-Solver.
+Ein Speedup von $2{,}0$ bedeutet: Satzillas Empfehlung ist doppelt so schnell.
+
+\textbf{Ergebnisse}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Kennzahl} & \textbf{Wert} \\
+        \midrule
+        Durchschnittlicher Speedup & 1,47 \\
+        \midrule
+        Median Speedup & 1,25 \\
+        \midrule
+        Instanzen mit Speedup $> 1{,}0$ & 67,5\% (54 von 80) \\
+        \midrule
+        Maximaler Speedup & 4,82 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Speedup-Kennzahlen von Satzilla gegenüber kissat\_default}\label{tab:speedup_stats}
+\end{table}
+
+\textbf{Durchschnittlicher Speedup (Top‑1)}: 1,47× schneller als kissat\_default.
+
+\textbf{Fazit}: Ein Nutzer, der der Satzilla‑Empfehlung folgt, ist im Durchschnitt \textbf{47 \% schneller}
+ als mit dem Standard‑Solver. Berücksichtigt er die Top‑drei Empfehlungen, erreicht er in 85 \% der 
+ Fälle eine nahezu optimale Leistung. Satzilla ist damit nicht nur besser als Zufallsverfahren, 
+sondern liefert einen messbaren, praktischen Zeitvorteil für die portfoliogestützte SAT‑Lösung.
+
 
 \newpage
 
@@ -390,9 +437,8 @@ aber aussagekräftigen Beitrag zu den Entscheidungen des Modells.
 \begin{table}[H]
     \centering
     \begin{tabular}{p{0.2\textwidth}p{0.22\textwidth}p{0.2\textwidth}p{0.35\textwidth}}
-        \toprule
         \textbf{Kategorie} & \textbf{Features in Top 15} & \textbf{Wichtigkeit (\%)} & \textbf{Wichtige Erkenntnis} \\
-        \midrule
+        \toprule
         Graph (Clause) & 5 & $\sim$8.2 & Das Wichtigste: Die Verknüpfung von Klauseln bestimmt die Unterschiede zwischen den Solvern \\
         \midrule
         Preprocessing & 2 & $\sim$3.3 & Entscheidend ist, inwieweit die Instanz die Sache vereinfacht \\
@@ -401,7 +447,7 @@ aber aussagekräftigen Beitrag zu den Entscheidungen des Modells.
         \midrule
         Clause length & 2 & $\sim$3.1 & Der Unterschied zwischen binären und langen Klauseln ist entscheidend \\
         \midrule
-        Size & 2 & $\sim$2.6 & Still relevant, but not dominant \\
+        Size & 2 & $\sim$2.6 & Immer noch relevant aber nicht dominierent \\
         \midrule
         Local search & 1 & $\sim$1.3 & Liefert ein ergänzendes Härtesignal \\
         \bottomrule

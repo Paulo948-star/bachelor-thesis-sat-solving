@@ -47,7 +47,15 @@ Er verfügt über verbesserte Datenstrukturen, eine optimierte Ablaufplanung der
 optimierte Algorithmen und Implementierungen.
 
 Kissat belegte den ersten Platz in der Hauptkategorie des SAT-Wettbewerbs 2020 und den ersten Platz 
-bei den unlösbaren Instanzen.
+bei den unlösbaren Instanzen.\cite{kissat_website}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/Kissat SAT Solver.png}
+    \caption{Kissat SAT Solver \cite{kissat_website}}
+    \label{fig:Kissat SAT Solver}
+\end{figure}
+
 
 \subsubsection{Kissat Architektur}
 
@@ -152,12 +160,35 @@ deuten darauf hin, dass der Solver die Berechnung nicht innerhalb der zugewiesen
 Daraus schließt man das das Problem unsatisfiable ist, sprich der solver konnte dafür keine Lösung finden 
 die das Problem erfüllen könnte.
 
-\subsection{Satzilla}
+\newpage
 
-Satzilla (Xu et al., 2008) ist ein wegweisendes System, das maschinelles Lernen auf das Problem der 
-Solverauswahl anwendet. Die zentrale Erkenntnis besteht darin, dass SAT-Instanzen durch Merkmale 
-charakterisiert werden können, die die Leistung des Solvers vorhersagen. Durch das Lernen aus 
-historischen Laufzeitdaten kann Satzilla den besten Solver für bisher unbekannte Instanzen auswählen.\cite{xu2008satzilla}
+\subsection{SATzilla}
+
+SATZilla ist ein Algorithmus-Portfolio für SAT-Probleme, das auf sogenannten "Empirical Hardness Models" 
+basiert – lernenden Modellen, die die Laufzeit eines gegebenen Algorithmus auf einer gegebenen 
+SAT-Instanz vorhersagen. \cite{Nudelman2004SATzillaA}
+
+Es ist seit langem bekannt, dass es keinen einzelnen "dominanten" SAT-Solver gibt – verschiedene Solver 
+arbeiten auf verschiedenen Instanzen unterschiedlich gut . Anstatt für eine ganze Klasse von Instanzen 
+einen einzigen Solver zu wählen, trifft SATzilla diese Entscheidung online, auf Einzelinstanz-Basis.\cite{xu2008satzilla}
+
+\subsection{Funktionsweise}
+
+SATzilla verwendet ein zweistufiges Verfahren:
+
+\begin{enumerate}
+    \item \textbf{Merkmalsextraktion}: Aus einer gegebenen SAT-Instanz werden strukturelle Eigenschaften extrahiert (z.B. Anzahl der Variablen und Klauseln, Graph-Eigenschaften).
+    \item \textbf{Laufzeitvorhersage}: Basierend auf diesen Merkmalen sagt ein gelerntes Modell voraus, welcher Solver voraussichtlich am schnellsten sein wird. Die Architektur enthält Module für Feature Extraction, Runtime Prediction und Portfolio Selection.
+\end{enumerate}
+
+Die Methode ist weitgehend automatisiert: Sie erhält als Eingabe eine Verteilung von Probleminstanzen 
+und eine Menge von Kandidaten-Solvern und konstruiert ein Portfolio, das eine bestimmte Zielfunktion 
+optimiert.
+
+SATzilla ist ein auf \textbf{maschinellem Lernen basierendes Portfolio-System}, das für jede neue SAT-Instanz den 
+voraussichtlich schnellsten Solver aus einer Menge von Kandidaten auswählt. Die Methode nutzt extrahierte 
+Merkmale der Instanz, um die Laufzeit verschiedener Solver vorherzusagen, und hat ihre Überlegenheit 
+gegenüber einzelnen Solvern in mehreren SAT Competitions bewiesen.
 
 \newpage
 

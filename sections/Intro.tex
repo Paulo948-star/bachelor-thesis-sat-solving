@@ -1,8 +1,25 @@
 \section{Einleitung}\label{sec:einleitung}
 
 Das Erfüllbarkeitsproblem der Aussagenlogik (SAT, von englisch satisfabiality "Erfüllbarkeit") ist ein 
-fundamentales Problem der Informatik mit kritischen Anwendungen in Software und Hardware Überprüfung.
+fundamentales Problem der Informatik mit kritischen Anwendungen in Software und Hardware Überprüfung, im 
+automatisierten Testen, in der Planung, in der Bioinformatik sowie in vielen weiteren Bereichen der 
+Computer-Aided Design und der Künstlichen Intelligenz.
 
+Aufgrund seiner zentralen Bedeutung für die Komplexitätstheorie – SAT war das erste nachgewiesene 
+NP-vollständige Problem – dient es als Ausgangspunkt für die Analyse unzähliger weiterer algorithmischer 
+Fragestellungen. Die typische Eingabe für SAT-Solver ist eine aussagenlogische Formel in konjunktiver 
+Normalform (KNF), also eine Konjunktion von Klauseln, wobei jede Klausel eine Disjunktion von Literalen 
+(Variablen oder negierten Variablen) darstellt.
+
+Die Frage, ob eine solche Formel erfüllbar ist – das heißt, ob es eine Belegung der booleschen Variablen 
+mit den Werten wahr oder falsch gibt, die die gesamte Formel wahr macht – ist entscheidungsrelevant: 
+Erfüllbare Formeln belegen die Korrektheit eines Modells, während unerfüllbare Formeln beweisen, dass 
+keine solche Belegung existiert.
+
+Fortschritte in der SAT-Lösungstechnologie, insbesondere durch das CDCL 
+(Conflict-Driven Clause Learning)-Verfahren, haben es ermöglicht, Instanzen mit Millionen von 
+Variablen und Klauseln effizient zu lösen. Dadurch ist SAT zu einem praktischen Werkzeug für 
+viele reale Anwendungen geworden, bei denen komplexe logische Bedingungen geprüft werden müssen.
 
 \newpage
 
