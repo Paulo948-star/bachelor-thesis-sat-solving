@@ -44,9 +44,8 @@ Genauigkeit der Ergebnisse der Fake Solver:
 \begin{table}[htbp]
     \centering
     \begin{tabular}{lcc}
-        \toprule
         \textbf{Test} & \textbf{Solver Count} & \textbf{Accuracy} \\
-        \midrule
+        \toprule
         Sprungfunktion mit beliebigen Schwellenwerten (100k/200k) & 3 & 65\% \\
         \midrule
         Lineare Funktion (laufzeit in relation zur Anzahl der Variablen) & 3 & 99\% \\
@@ -188,28 +187,24 @@ der tatsächlich schnellste Lösungsvorschlag unter den ersten k Vorhersagen auf
 
 \subsubsection{Resultate}
 
+Hier die Ergebnisse dargestellt als Grafiken
+    
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{assets/top_k_accuracy_corrected.png}
-    \caption{Vergleich der Top 3 besten Solver}
-    \label{fig:top_k_accuracy_corrected}
-
-    \vspace{10pt}
-
-
     \includegraphics[width=0.7\textwidth]{assets/prediction_quality_breakdown_corrected.png}
     \caption{Zusammenfassung der Besten Solver}
     \label{fig:prediction_quality_breakdown_corrected}
+\end{figure}
+    
 
-    \vspace{10pt}
-
-
+\begin{figure}[htbp]
+    \centering
     \includegraphics[width=0.7\textwidth]{assets/topk_vs_random_corrected.png}
     \caption{Vergleich der drei besten Solver mit Zufallsprinzip}
     \label{fig:prediction_quality_breakdown_corrected}
 \end{figure}
 
-\newpage
 
 \begin{figure}[htbp]
     \centering
@@ -218,6 +213,7 @@ der tatsächlich schnellste Lösungsvorschlag unter den ersten k Vorhersagen auf
     \label{fig:per_solver_topk_accuracy}
 \end{figure}
 
+\newpage
 
 \subsubsection{Interpretation – Zeitlicher Vorteil gegenüber dem Standard-Solver}
 
@@ -237,6 +233,9 @@ empfohlenen Solvers mit der Laufzeit des kissat\_default-Solvers auf den 80 Test
 
 Für jede Testinstanz gilt:
 \begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
     \item $t_{\text{default}}$ = Laufzeit von kissat\_default (Sekunden)
     \item $t_{\text{satzilla}}$ = Laufzeit des von Satzilla als schnellsten vorhergesagten Solvers
 \end{itemize}
@@ -254,9 +253,8 @@ Ein Speedup von $2{,}0$ bedeutet: Satzillas Empfehlung ist doppelt so schnell.
 \begin{table}[H]
     \centering
     \begin{tabular}{lc}
-        \toprule
         \textbf{Kennzahl} & \textbf{Wert} \\
-        \midrule
+        \toprule
         Durchschnittlicher Speedup & 1,47 \\
         \midrule
         Median Speedup & 1,25 \\

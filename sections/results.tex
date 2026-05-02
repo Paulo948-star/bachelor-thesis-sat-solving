@@ -19,8 +19,8 @@ anhand von ursprünglichen, unverarbeiteten Benchmarks entwickelt und evaluiert.
 die Vorhersagen von SATZilla auch dann gültig bleiben, wenn sie auf vorverarbeitete Formeln angewendet 
 werden.
 
-SATZilla führt selber preprocessing aus. Wenn man diesen Trivialen entfernt und SATZilla sich auf den 
-harten Teil fokussieren kann sollte meine Hoffnung sein das die Predicitons dann besser werden und 
+SATZilla führt selber preprocessing aus. Wenn man diesen Trivialen effekt entfernt und SATZilla sich auf den 
+harten Teil fokussieren kann sollte meine Hoffnung sein, dass die Predicitons dann besser werden und 
 meiner Einschätzung nach sich mehr verändert bei $0\rightarrow10k$ als bei $10k\rightarrow100k$, weil am 
 Anfang mehr Teile wegfallen.
 
@@ -33,8 +33,10 @@ Benchmarks stehen.
 Die Idee ist nun mit dem trainierten Satzilla model zu vergleichen wie sich die Predicitons unterscheiden
 mit dem ursprünlgichen und vereinfachten Benchmarks und was wir daraus schließen können.
 
-Zum Schluss werde ich untersuchen ob die Laufzeiten von den vereinfachten Benmchamrks verglichen mit dem 
+Zu guter Letzt werde ich untersuchen ob sich die Laufzeiten verbessern wenn man die gleichen Benchmarks 
+jeweils leicht und stark vereinfacht.
 
+\newpage
 
 \subsection{Setup}
 
@@ -393,7 +395,7 @@ Diese Analyse vergleicht die wichtigsten Features, die die Vorhersagen von SATZi
     \item Was dies darüber aussagt, wie die Vorverarbeitung die Formelstruktur beeinflusst
 \end{itemize}
 
-\subsubsection{Die Daten: Die 15 wichtigsten Merkmale für jede Vorverarbeitungsstufe}
+\subsubsection{Wichtigste Features für jede Vorverarbeitungsstufe}
 
 \begin{figure}[H]
     \centering
@@ -504,6 +506,13 @@ meinem Tutor der die jeweiligen Benchmarks mit SATzilla verglichen hat.
 
 \subsubsection{Ergebnisse Pre10k (10.000 Simplifikationsschritte)}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{assets/pre10k_time_comparison_plots.png}
+    \caption{Ergebnisse von Pre10k}
+    \label{fig:pre10k_time_comparison_plots}
+\end{figure}
+
 \begin{table}[H]
     \centering
     \begin{tabular}{lc}
@@ -559,6 +568,13 @@ Mit der Vereinfachung von Pre10k waren letzendlich 164 Benchmarks (52,4\%) schne
 \end{table}
 
 \subsubsection{Ergebnisse Pre100k (100.000 Simplifikationsschritte)}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{assets/time_comparison_plots_all_solvers.png}
+    \caption{Ergebnisse von Pre100k}
+    \label{fig:time_comparing_plots_all_solvers}
+\end{figure}
 
 \begin{table}[H]
     \centering
