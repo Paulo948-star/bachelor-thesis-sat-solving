@@ -11,8 +11,8 @@ Erstens bestätigt die erfolgreiche Validierung mit Fake-Solvern, dass die SATZi
 der Feature-Extraktion über das Training bis zur Vorhersage – korrekt implementiert ist. Die hohe 
 Genauigkeit und die plausible Features beweisen, dass das Verfahren lernen kann.
 
-Zweitens zeigt die Anwendung auf sechs echte Kissat-Varianten, dass SATZilla auch bei komplexen, 
-realen Solvern nutzbare Vorhersagen liefert. Mit einer Top-3-Genauigkeit von 85 \% und einem 
+Zweitens zeigt die Anwendung auf sechs echte Kissat-Varianten, dass man SATZilla darauf trainieren kann und 
+nutzbare Vorhersagen liefert. Mit einer Top-3-Genauigkeit von 85 \% und einem 
 durchschnittlichen Speedup von 1,47 gegenüber dem Standard-Solver ist SATZilla nicht nur besser 
 als ein Zufallsverfahren, sondern auch praktisch nützlich für die portfoliogestützte SAT-Lösung. 
 Die Analyse der Features offenbart zudem, welche strukturellen Eigenschaften einer 
@@ -31,20 +31,17 @@ zwar etwa die Hälfte der Instanzen, kann in Einzelfällen aber zu extremen Verl
 Ein signifikanter Vorteil von 100.000 gegenüber 10.000 Vereinfachungsschritten konnte nicht 
 festgestellt werden.
 
-Abschließend möchte ich sagen das mir die Arbeit sehr gefallen hat und ich viel über ein neues Thema 
-lernen konnte. Besonders spannend fand ich die Arbeit an der Forschung von Vorhersagen und die anschließende
-Auswertung der Daten.
 
 \subsection{Technische Daten}
 
-Die Arbeit wurde von meinem Windows 11 Heim PC erstellt und mit WSl, damit diesem konnte ich mich mit einer ssh verbindung 
-am PC der Technischen Fakultät anmelden, dies war von großem Vorteil da ich breits im meinem 
-Bachelorprojekt mehr RAM für meine brechnungen brauchte. Tmux erwies sich als nützlich um Programme über 
-einen längeren Zeitraum laufen lassen zu können.
+Die Erstellung der Arbeit erfolgte auf einem lokalen Windows-11-Rechner mittels WSL. Für rechenintensive Berechnungen 
+wurde eine SSH-Verbindung zu einem Rechner der Technischen Fakultät genutzt, was insbesondere aufgrund 
+des erhöhten Arbeitsspeicherbedarfs im vorausgegangenen Bachelorprojekt von Vorteil war. Die Nutzung von 
+Tmux erwies sich als vorteilhaft für die Ausführung längerer Rechenprozesse.
 
-Das Programmiern der Skripte wurde mit Python 3.9 geschrieben mit folgenden Bibliotheken: numpy, pandas, 
-scikit-learn (random forest), matplotlib (zum erstellen der Diagramme und Visualierungen), seaborn, joblib, plotly, 
-tqdm, requests. Ausgeführt wurden die Skripte mit Conda.
+Die Implementierung der Skripte erfolgte in Python 3.9 unter Verwendung folgender Bibliotheken: NumPy, 
+Pandas, scikit-learn (insbesondere Random Forest), Matplotlib (für Diagramme und Visualisierungen), 
+Seaborn, Joblib, Plotly, TQDM sowie Requests. Die Ausführung der Skripte wurde mittels Conda verwaltet.
 
 
 

@@ -26,14 +26,14 @@ Anfang mehr Teile wegfallen.
 
 \textit{Führt eine Vereinfachung der Benchmarks zu besseren vorhersagen?}
 
-Hierführ bekam ich von meinem Tutor zwei neue Dateien mit den Namen: \textbf{sc2024pre10k} und 
+Hierführ die zwei neue Dateien mit den Namen: \textbf{sc2024pre10k} und 
 \textbf{sc2024pre100k}, wobei 10k \& 100k jeweils für eine Vereinfachung von 10.000 und 100.000 fur die 
-Benchmarks stehen.
+Benchmarks stehen.\cite{runtimes2025}
 
 Die Idee ist nun mit dem trainierten Satzilla model zu vergleichen wie sich die Predicitons unterscheiden
 mit dem ursprünlgichen und vereinfachten Benchmarks und was wir daraus schließen können.
 
-Zu guter Letzt werde ich untersuchen ob sich die Laufzeiten verbessern wenn man die gleichen Benchmarks 
+Zu guter Letzt wurde untersucht ob sich die Laufzeiten verbessern wenn man die gleichen Benchmarks 
 jeweils leicht und stark vereinfacht.
 
 \newpage
@@ -45,8 +45,8 @@ jeweils leicht und stark vereinfacht.
     \setlength{\itemsep}{0pt}
     \setlength{\parskip}{0pt}
     \setlength{\parsep}{0pt}
-    \item 400 SAT benchmarks aus der SAT Wettbewerb
-    \item 6 Kissat Solver varianten:
+    \item 400 SAT benchmarks aus dem SAT Wettbewerb \cite{satcompetition2025}
+    \item 6 Kissat Solver varianten: \cite{biere2020kissat}
 \end{itemize}
 
 \begin{quote}
@@ -59,12 +59,12 @@ jeweils leicht und stark vereinfacht.
 \end{quote}
 
 \begin{itemize}
-    \item Laufzeit Data aus kissat-strategy-runs.tar.xz
+    \item Laufzeit Data aus kissat-strategy-runs.tar.xz \cite{runtimes2025}
 \end{itemize}
 
 \textbf{Test Data:}
 \begin{itemize}
-    \item 324 gemeinsame Instanzen der drei Versionen:
+    \item 324 gemeinsame Instanzen der drei Versionen: \cite{runtimes2025}
 \end{itemize}
 
 \begin{quote}
@@ -100,12 +100,12 @@ Zeitlimit von 180 Sekunden galt. Der Featuresextraktor Prozess umfasste:
 Während der Vorverarbeitung (Vereinfachung) wurden einige Testfälle bereits vollständig gelöst 
 (SAT/UNSAT ermittelt), noch bevor der Solver überhaupt gestartet war.
 
-Bedeutet der Featuresextraktor konnte gar keine CNF Datei extrahieren da diese bereits gelöst war.
+Bedeutet, der Featuresextraktor konnte gar keine CNF Datei extrahieren, da diese bereits gelöst war.
 
 Durch stärkere Vereinfachung wurden auch mehr Benchmarks gelöst, so wurden von Pre10k 52 der benchmarks 
-beretis gelöst und 76 Benchamrks von Pre100k.
+bereits gelöst und 76 Benchmarks von Pre100k.
 
-Somit hatte ich letztendlich 324 gemeinsame Benchmarks zum vergleichen.
+Somit gab es letztendlich 324 gemeinsame Benchmarks zum vergleichen.
 
 
 
@@ -118,9 +118,8 @@ Ein Random-Forest-Klassifikator wurde mit den folgenden Hyperparametern trainier
 \begin{table}[H]
     \centering
     \begin{tabular}{ll}
-        \toprule
         \textbf{Parameter} & \textbf{Wert} \\
-        \midrule
+        \toprule
         Anzahl der Bäume & 200 \\
         \midrule
         Maximale Tiefe & 20 \\
@@ -139,29 +138,28 @@ Ein Random-Forest-Klassifikator wurde mit den folgenden Hyperparametern trainier
 
 \textbf{Trainingsergebnisse}
 
-Die Trainingsergebnisse waren mit einer Testgenauigkeit von 43.08 \% wider sehr Ähnlich unserem Ergebnissen
-aus Kapitel 3 und somit zuferlässig genug um jetzt verhersagen auf unseren Verinfachten Benchmarks durchzuführen.
+Die Trainingsergebnisse waren mit einer Testgenauigkeit von 43.08 \% wieder sehr Ähnlich mit den Ergebnissen
+aus Kapitel 3 und somit zuferlässig genug um jetzt Vorhersagen auf die Vereinfachten Benchmarks durchzuführen.
 
 \newpage
 
 \subsection{Auswirkungen der Vorverarbeitung auf die Vorhersagen von SATZilla}
 
-\textbf{Forschungsfrage}
 
 Beeinflusst die Vorverarbeitung (Vereinfachung) von SAT-Instanzen die Vorhersagen von SATZilla zur 
 Solverauswahl?
 
-Meine Vermutung liegt darin das sich die Vorhersagen der Solver bestimmt ändern muss, da SATZilla die 
+Die Vermutung liegt nahe das sich die Vorhersagen der Solver bestimmt ändern muss, da SATZilla die 
 Sover demenentsprechend der Features auswählt, ändern sich somit die Features sollte sich doch 
 ebenfalls die Vorhersage des Solvers in einigen Fällen ändern.
 
 Wie groß diese Ändereungen sein werden und ob eine stärkere Verinfachung zu noch größeren Veränderungen 
-der Solver Auswahl haben wird werden wir jetzt sehen.
+der Solver Auswahl wird jetzt gezeigt.
 
 \subsubsection{Veränderungen der Vorhersageverteilung}
 
-Jetzt die Grafik meiner Ergebnisse die darstellt wie sich die Solver Verteilung der drei 
-verschiedenen benchmarks darstellt.
+Jetzt die Grafik der Ergebnisse die darstellt wie sich die Solver Verteilung der drei 
+verschiedenen Benchmarks darstellt.
 
 \begin{figure}[H]
     \centering
@@ -173,7 +171,7 @@ verschiedenen benchmarks darstellt.
 Die Grafik zeigt, wie sich die Solver-Empfehlungen von SATZilla bei denselben 324 Benchmarks je nach 
 Vorverarbeitungsstufe unterscheiden.
 
-Meine Vermutung lag richtig und man kann erkennen das sich die Solver Empfehlung verändert hat aber 
+Die Anfangsvermutung lag richtig und man kann erkennen das sich die Solver Empfehlung verändert hat aber 
 so das man immer noch eine gewisse ähnlichkeit erkennen kann vor jeder Vereinfachung.
 
 Die Verschiebung der Verteilung zeigt, dass die Vorverarbeitung nicht alle Solver gleichermaßen 
@@ -235,7 +233,7 @@ anfänglichen Vereinfachung auftritt.
     \caption{Vorhersageänderungen zwischen verschiedenen Vorverarbeitungsstufen}\label{tab:prediction_changes}
 \end{table}
 
-Wie man sieht änder sich die Solver Empfehlung von \textbf{Original} verglichen mit \textbf{Pre10k} und 
+Wie man sieht ändert sich die Solver Empfehlung von \textbf{Original} verglichen mit \textbf{Pre10k} und 
 \textbf{Pre100k} um 36.8-41.5\%.
 
 Das bedeutet, dass in mehr als einem Drittel aller Fälle die Vorverarbeitung die Empfehlung 
@@ -261,7 +259,7 @@ Interessante Beobachtung: $119 + 56 = 175$, was größer ist als $134$. Das bede
     \item Andere Benchmarks änderten sich nur zwischen Original und Pre100k (überspringen Pre10k)
 \end{itemize}
 
-durch diese Beaobachtung empfahl mir mein Tutor auch nach der Analyse welche Solver sich genau geändert 
+durch diese Beaobachtung gab es die Empfehlung auch nach der Analyse welche Solver sich genau geändert 
 haben, sprich die Migration von jedem Solver.
 
 \subsubsection{Analyse der Solver-Migration}
@@ -313,7 +311,7 @@ werden eliminiert, Klauseln werden subsumiert, und die allgemeinen Verbindungsmu
 verschieben sich.
 
 Das heißt aber nicht das die Vorhersagen der vereinfachten Benchmarks dann ünguldig sind, der neue 
-empfohlende solver kann durchaus als der schnellste sein der dieses (vereinfachte) Problem lösen kann.
+empfohlende Solver kann durchaus als der schnellste sein der dieses (vereinfachte) Problem lösen kann.
 
 \textbf{2. Die Vorverarbeitung wirkt sich nicht auf alle Solver gleichermaßen aus}
 
@@ -324,6 +322,10 @@ Vorverarbeitung zum am häufigsten empfohlenen Löser. Ihr Anteil verdoppelt sic
 Dies liegt wahrscheinlich daran, dass kissat\_nostable sich besonders gut für vereinfachte Formeln 
 eignet. Das Fehlen einer Heuristik für stabile Phasen kann von Vorteil sein, wenn die Formel bereits 
 vereinfacht wurde.
+
+Ein weiter Grund könnte sein da kisat\_nostable besser für unsat ist und kissat\_stabel2 und kissat\_target2 besser für sat, dass 
+dann kissat\_stable möglicherweiße ein Mix ist, es könnte auch darauf hinweisen, dass SATZilla sich dann 
+sicherer ist in welche richtung es gehen sollte.
 
 \textbf{3. Die meisten Abweichungen treten während der anfänglichen Vereinfachung auf}
 
@@ -336,7 +338,7 @@ bewirken die dramatischsten Veränderungen im Merkmalsraum. Weitere Vorverarbeit
 Die Migrationsmuster zeigen, dass verschiedene Solver unterschiedliche "Komfortzonen" im Feature-Raum haben:
 \begin{itemize}
     \item \textbf{nostable} gewinnt Instanzen von mehreren anderen Solvern (stable2, default, target2), was darauf hindeutet, dass vorverarbeitete Formeln gemeinsame Eigenschaften aufweisen, die nostable über ein breites Spektrum ursprünglicher Solver-Empfehlungen hinweg zur besten Wahl machen.
-    \item \textbf{stable2} verliert Instanzen hauptsächlich an nostable, was darauf schließen lässt, dass die beiden Konfigurationen bei vorverarbeiteten Formeln austauschbar (Substitute) sind.
+    \item \textbf{stable2} verliert Instanzen hauptsächlich an nostable, was darauf schließen lässt, dass die beiden Konfigurationen bei vorverarbeiteten Formeln austauschbar (Substitute) sind oder wieder daran, dass SATZilla sich nun sichere ist das diese Instanz unsat ist.  
 \end{itemize}
 
 \textbf{5. Es besteht ein eindeutiger Zusammenhang zwischen Dosis und Wirkung}
@@ -373,12 +375,12 @@ Die Dosis-Wirkungs-Beziehung – mehr Vorverarbeitung führt zu mehr Änderungen
 SATZilla-Merkmale empfindlich auf tatsächliche strukturelle Modifikationen in Formeln reagieren, 
 was ihre Nützlichkeit für die Algorithmusauswahl bestätigt. 
 
-Meiner Meinung nach sind die Vorhersagen von SATZilla auf vereinfachte Benchmarks immer noch von großer
+Zusammenfassend sind die Vorhersagen von SATZilla auf vereinfachte Benchmarks immer noch von großer
 relevanz, da die veränderten Vorhersagen durch die ebenfalls veränderten Eigenschaften entstanden sind 
 und nicht weil SATZilla wahllos neue Empfehlungen macht.
 
 Trotzdem sollte man in betracht ziehen, dass eine vereinfachung der Benchmarks immer zu verränderten Vorhersagen 
-führen wird und ich hiermit in meiner Arbeit nicht bestätigen kann ob es auch dann immer der richtige (schnellste) 
+führen wird und ich hiermit in dieser Arbeit nicht bestätigen werden kann ob es auch dann immer der richtige (schnellste) 
 Solver sein wird.
 
 \newpage
@@ -453,7 +455,7 @@ Neustartstrategien müssen sich an diese strukturellen Eigenschaften anpassen.
     \caption{Vergleich der Feature-Wichtigkeiten: Pre10k vs Pre100k}\label{tab:feature_importance_comparison}
 \end{table}
 
-Was uns diese unterschiede sagen:
+Was uns diese Unterschiede sagen:
 \begin{itemize}
     \item „reducedVars“ gewinnt ab Pre100k an Bedeutung. Nach einer intensiven Vorverarbeitung ist die Anzahl der bei der Vereinfachung eliminierten Variablen ein aussagekräftigerer Indikator für die Leistung des Solvers. Das ist einleuchtend: Eine aggressivere Vorverarbeitung eliminiert mehr Variablen und verändert damit grundlegend die Größe und Struktur der Formel.
     \item Der SP-Mittelwert ohne Einschränkungen springt bei Pre100k von Rang 12 auf Rang 4. Die mittlere Wahrscheinlichkeit ohne Einschränkungen gewinnt nach einer intensiven Vorverarbeitung deutlich an Bedeutung. Dies deutet darauf hin, dass eine intensive Vorverarbeitung zu gleichmäßigeren Verteilungen der Variablen ohne Einschränkungen führt, wodurch der Mittelwert zu einer besseren zusammenfassenden Statistik wird als der Median.
@@ -478,11 +480,11 @@ Vorverarbeitungsstufen hinweg.
 
 \subsection{Laufzeitvergleich Pre10k vs. Pre100k}
 
-Im Rahmen der Experimente habe ich untersucht, wie sich unterschiedliche Grade der Vorverarbeitung 
-(Preprocessing) auf die Gesamtlösungszeit von SAT-Instanzen auswirken. Dabei habe ich vollständige 
-Lösungszeit (Full Runtime) mit der kombinierten Zeit aus Vorverarbeitung (Preprocessing Time) und 
-verbleibender Lösungszeit (Remaining Runtime) verglichen. Die Laufzeiten bekam ich als Dateien von 
-meinem Tutor der die jeweiligen Benchmarks mit SATzilla verglichen hat.
+Im Rahmen der Experimente wurde ebenfalls untersucht, wie sich unterschiedliche Grade der Vorverarbeitung 
+(Preprocessing) auf die Gesamtlösungszeit von SAT-Instanzen auswirken. Dabei wurde vollständige die
+Lösungszeit (Full Runtime) des default Kissats mit der kombinierten Zeit aus Vorverarbeitung (Preprocessing Time) und 
+verbleibender Lösungszeit (Remaining Runtime) verglichen. Die Laufzeiten wurden von dem Tutor Dr. Mathias 
+Fleury brechnet und anschließend zugewiesenen. \cite{runtimes2025}
 
 \textbf{Verglichen wurden drei Szenarien}:
 \begin{itemize}
@@ -494,7 +496,7 @@ meinem Tutor der die jeweiligen Benchmarks mit SATzilla verglichen hat.
     \item \textbf{Pre100k}: 100.000 Simplifikationsschritte + verbleibende Lösungszeit
 \end{itemize}
 
-\textbf{Datenquellen}:
+\textbf{Datenquellen}:\cite{runtimes2025}
 \begin{itemize}
     \setlength{\itemsep}{0pt}
     \setlength{\parskip}{0pt}

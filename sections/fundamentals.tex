@@ -1,6 +1,6 @@
 \section{\iflanguage{english}{Preliminaries}{Grundlagen}}\label{sec:preliminaries}
 
-In diesem Kapitel beschreibe ich die Grundlagen die für die Späteren Kapitel von bedeutung sein werden.
+In diesem Kapitel werden die Grundlagen die für die Späteren Kapitel von bedeutung sein werden erklärt.
 Zuerst was CNF Dateien sind un wie sie aufgebaut sind, dann was Kissat und Satzilla sind und wie sie mit 
 Dateien trainiert werden um Predicitons von Solvern zu machen.
 
@@ -34,8 +34,8 @@ p cnf 3 4
 -1 -2 -3 0
 \end{verbatim}
 
-Dies stellt eine Formel mit 3 Variablen und 4 Klauseln dar. Die Zeile „p cnf“ gibt den Problemtyp und die 
-Dimensionen an (3 Variablen, 4 Klauseln), und jede nachfolgende Zeile stellt eine Klausel dar, die mit 0 
+Dies stellt eine Formel mit 3 Variablen und 4 Klauseln dar. Die Spalte „p cnf“ gibt den Problemtyp und die 
+Dimensionen an (3 Variablen, 4 Klauseln), und jede nachfolgende Spalte stellt eine Klausel dar, die mit 0 
 endet.
 
 \subsection{Kissat}
@@ -44,7 +44,7 @@ Kissat ist ein hochmoderner SAT-Löser nach dem Prinzip des Conflict-Driven Clau
 von Armin Biere und seiner Forschungsgruppe an der Johannes Kepler Universität Linz entwickelt 
 wurde. Der Kissat-SAT-Solver ist eine komprimierte und verbesserte Neuimplementierung von CaDiCaL in C.
 Er verfügt über verbesserte Datenstrukturen, eine optimierte Ablaufplanung der Datenverarbeitung sowie 
-optimierte Algorithmen und Implementierungen.
+optimierte Algorithmen und Implementierungen.\cite{biere2020kissat}
 
 Kissat belegte den ersten Platz in der Hauptkategorie des SAT-Wettbewerbs 2020 und den ersten Platz 
 bei den unlösbaren Instanzen.\cite{kissat_website}
@@ -63,7 +63,7 @@ Kissat implementiert den CDCL-Algorithmus mit mehreren ausgefeilten Optimierunge
 
 Kissat ist ein „einfacher und übersichtlicher Bare-Metal-SAT-Löser“, der in C geschrieben ist. Es handelt 
 sich um eine Portierung von CaDiCaL zurück nach C mit verbesserten Datenstrukturen, einer optimierten 
-Ablaufplanung der Datenverarbeitung sowie optimierten Algorithmen und Implementierungen.
+Ablaufplanung der Datenverarbeitung sowie optimierten Algorithmen und Implementierungen.\cite{biere2020kissat}
 
 \textbf{1. Variblen Elimination}
 
@@ -121,9 +121,9 @@ Inprocessing wendet Vereinfachungstechniken während der gesamten Lösung wieder
 Diese sechs Kissat-Varianten decken die wichtigsten Dimensionen des Konfigurationsraums ab – von 
 minimaler Vorverarbeitung (noeliminate) über Standardverhalten (default) bis hin zu maximaler 
 Stabilisierung (stable, stable2) und alternativen Heuristiken (target2) – und ermöglichen es 
-Satzilla somit, für jede Instanz die passendste Strategie zu erlernen.
+Satzilla somit, für jede Instanz die passendste Strategie zu erlernen.\cite{biere2020kissat}
 
-Dies ist der Grund weshalb genau diese sechs Kissat Solver für diese Arbeit ausgewählt, da sie am 
+Dies ist der Grund weshalb genau diese sechs Kissat Solver für diese Arbeit ausgewählt wurden, da sie am 
 relevantesten sind.
 
 Kissat bietet zahlreiche Konfigurationsoptionen, mit denen sich sein Verhalten anpassen lässt. Die in 
@@ -156,9 +156,11 @@ Vorverarbeitung und der Rechengeschwindigkeit dar:
 Die Leistung eines Solvers wird in der Regel anhand der Gesamtlaufzeit oder der CPU-Zeit gemessen. In 
 dieser Arbeit verwende ich die vom Feld „process-time“ von Kissat gemeldete Laufzeit, die die zur Lösung 
 der Instanz aufgewendeten CPU-Sekunden angibt. Zeitüberschreitungen (z. B. 3600 Sekunden, 7200 Sekunden) 
-deuten darauf hin, dass der Solver die Berechnung nicht innerhalb der zugewiesenen Zeit abgeschlossen hat.
+deuten darauf hin, dass der Solver die Berechnung nicht innerhalb der zugewiesenen Zeit abgeschlossen hat.\cite{biere2020kissat}
 Daraus schließt man das das Problem unsatisfiable ist, sprich der solver konnte dafür keine Lösung finden 
-die das Problem erfüllen könnte.
+die das Problem erfüllen könnte. Das bedeutet nicht das es mit 100\% Wahrscheinlchtkeit keine erfüllbare 
+Lösung gibt sondern nur das der Solver zeitlich keine Finden konnte, wenn er zeitlich keine Lösung finden konnte 
+gilt es als "Unknown".
 
 \newpage
 
@@ -172,7 +174,7 @@ Es ist seit langem bekannt, dass es keinen einzelnen "dominanten" SAT-Solver gib
 arbeiten auf verschiedenen Instanzen unterschiedlich gut . Anstatt für eine ganze Klasse von Instanzen 
 einen einzigen Solver zu wählen, trifft SATzilla diese Entscheidung online, auf Einzelinstanz-Basis.\cite{xu2008satzilla}
 
-\subsection{Funktionsweise}
+\subsubsection{Funktionsweise}
 
 SATzilla verwendet ein zweistufiges Verfahren:
 
@@ -188,7 +190,7 @@ optimiert.
 SATzilla ist ein auf \textbf{maschinellem Lernen basierendes Portfolio-System}, das für jede neue SAT-Instanz den 
 voraussichtlich schnellsten Solver aus einer Menge von Kandidaten auswählt. Die Methode nutzt extrahierte 
 Merkmale der Instanz, um die Laufzeit verschiedener Solver vorherzusagen, und hat ihre Überlegenheit 
-gegenüber einzelnen Solvern in mehreren SAT Competitions bewiesen.
+gegenüber einzelnen Solvern in mehreren SAT Competitions bewiesen.\cite{xu2008satzilla}
 
 \newpage
 
@@ -200,9 +202,8 @@ Satzilla extrahiert aus jeder CNF-Formel über 100 Merkmale, die in mehrere Kate
     \centering
     \small
     \begin{tabular}{lp{0.3\textwidth}p{0.4\textwidth}}
-        \toprule
         \textbf{Kategorie} & \textbf{Features} & \textbf{Was sie messen} \\
-        \midrule
+        \toprule
         Basic & Anzahl der Variablen, Anzahl der Klauseln, Verhältnis & Größe und Dichte \\
         \midrule
         Variable-Clause Graph (VCG) & Mittelwert, Entropie, Min/Max & Verbindungsstruktur eines Graphen \\
@@ -228,7 +229,7 @@ CNF-Datei analysiert und eine CSV-Datei ausgibt, die eine Zeile pro Instanz enth
 
 \subsubsection{Machine Learning Model}
 
-Satzilla nutzt „Random Forest“ (Breiman, 2001) als Lernalgorithmus. „Random Forest“ ist ein 
+Satzilla nutzt „Random Forest“  als Lernalgorithmus\cite{breiman2001random}. „Random Forest“ ist ein 
 Ensemble-Verfahren, bei dem mehrere Entscheidungsbäume erstellt und deren Vorhersagen zusammengefasst 
 werden. Wesentliche Vorteile für diese Anwendung:
 
@@ -250,7 +251,7 @@ konzentriert sich auf die Genauigkeit der Solverauswahl.
 
 \subsubsection{Training und Prediction Pipeline}
 
-Die gesamte Satzilla-Pipeline besteht aus:
+Die gesamte Satzilla-Pipeline, die für diese Arbeit benötigt wurde, besteht aus:
 
 \[
 \begin{array}{ccc}
@@ -266,12 +267,12 @@ Die gesamte Satzilla-Pipeline besteht aus:
 \end{array}
 \]
 
-Mithilfe des SAT-Features-Extraktors habe ich 139 Features aus 400 CNF-Benchmarks extrahiert. Unabhängig 
-davon habe ich die Protokolle des Kissat-Lösers ausgewertet, um die genauen Laufzeiten für sechs 
+Mithilfe des SAT-Features-Extraktors wurden 139 Features aus 400 CNF-Benchmarks extrahiert (warum 139 und nicht 131 wird im Kapitel LP-Features erklärt). Unabhängig 
+davon wurden die Protokolle des Kissat-Lösers ausgewertet, um die genauen Laufzeiten für sechs 
 Lösungsvarianten bei denselben Instanzen zu ermitteln. 
 
-Nachdem ich die Merkmals- und Laufzeitdaten über eine Namenszuordnung abgeglichen hatten, identifizierte 
-ich dann den schnellsten Solver pro Instanz und trainierten einen Random-Forest-Klassifikator. 
+Nachdem die Merkmals- und Laufzeitdaten über eine Namenszuordnung abgeglichen wurden, identifizierte 
+man dann den schnellsten Solver pro Instanz und trainierten einen Random-Forest-Klassifikator. 
 Daraus entstand ein Satzilla-Modell, das anhand der Merkmale einer neuen Instanz vorhersagt, welcher 
 Kissat-Solver die beste Leistung erbringen wird.
 

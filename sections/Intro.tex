@@ -6,7 +6,7 @@ automatisierten Testen, in der Planung, in der Bioinformatik sowie in vielen wei
 Computer-Aided Design und der Künstlichen Intelligenz.
 
 Aufgrund seiner zentralen Bedeutung für die Komplexitätstheorie – SAT war das erste nachgewiesene 
-NP-vollständige Problem – dient es als Ausgangspunkt für die Analyse unzähliger weiterer algorithmischer 
+NP-vollständige Problem –\cite{cambridge_sat_2012} dient es als Ausgangspunkt für die Analyse unzähliger weiterer algorithmischer 
 Fragestellungen. Die typische Eingabe für SAT-Solver ist eine aussagenlogische Formel in konjunktiver 
 Normalform (KNF), also eine Konjunktion von Klauseln, wobei jede Klausel eine Disjunktion von Literalen 
 (Variablen oder negierten Variablen) darstellt.
@@ -18,23 +18,23 @@ keine solche Belegung existiert.
 
 Fortschritte in der SAT-Lösungstechnologie, insbesondere durch das CDCL 
 (Conflict-Driven Clause Learning)-Verfahren, haben es ermöglicht, Instanzen mit Millionen von 
-Variablen und Klauseln effizient zu lösen. Dadurch ist SAT zu einem praktischen Werkzeug für 
-viele reale Anwendungen geworden, bei denen komplexe logische Bedingungen geprüft werden müssen.
+Variablen und Klauseln effizient zu lösen\cite{springer_cdcl_2020}. Dadurch ist SAT zu einem praktischen Werkzeug für 
+viele reale Anwendungen geworden, bei denen komplexe logische Bedingungen geprüft werden müssen.\cite{cambridge_applications_2012}
 
 \newpage
 
 \subsection{Warum SAT wichtig ist}
 
-Trotz seiner theoretischen Bedeutung als erstes NP-vollständiges Problem (Cook, 1971) hat SAT breite 
+Trotz seiner theoretischen Bedeutung als erstes NP-vollständiges Problem hat SAT breite 
 praktische Anwendung in den Bereichen Hardware-Verifikation, Software-Testing, Planung und künstliche
 Intelligenz gefunden.\cite{cook1971complexity}
 
 Moderne SAT-solver haben in den letzten zwei Jahrzenten bemerkenswerte fortschritte gemacht; Löser wie
-Kissat (Biere et al., 2020) sind in der Lage, industrielle Instanzen mit Millionen von Variablen zu
+Kissat sind in der Lage, industrielle Instanzen mit Millionen von Variablen zu
 lösen.\cite{biere2020cadical}
 
 SAT hat breite praktische Anwendung gefunden, da sich viele Probleme aus der realen Welt als 
-SAT-Instanzen formulieren lassen:
+SAT-Instanzen formulieren lassen:\cite{cambridge_applications_2012}
 
 \begin{itemize}
     \setlength{\itemsep}{0pt}
@@ -42,17 +42,18 @@ SAT-Instanzen formulieren lassen:
     \setlength{\parsep}{0pt}
     \item \textbf{Hardware-Verifikation}: Nachweis, dass sich digitale Schaltungen korrekt verhalten
     \item \textbf{Softwaretests}: Erstellung von Testfällen, die bestimmte Pfade abdecken
-    \item \textbf{Planung und Terminierung}: Ermittlung von Handlungsabläufen, mit denen Ziele erreicht werden
+    \item \textbf{Planung}: Ermittlung von Handlungsabläufen, mit denen Ziele erreicht werden
     \item \textbf{Kryptoanalyse}: Knacken kryptografischer Systeme durch das Lösen logischer Beschränkungen
     \item \textbf{Bioinformatik}: Analyse genetischer Sequenzen und Proteinfaltung
 \end{itemize}
 
 Die praktische Bedeutung von SAT hat jahrzehntelange Forschungen zur Entwicklung effizienter SAT-Löser 
-vorangetrieben.
+vorangetrieben. Die zugrundeliegenden Benchmark-Instanzen für diese Arbeit wurden der 
+SAT Competition 2024 entnommen.\cite{satcompetition2024}
 
 Der praktische Erfolg der SAT-Lösung ist weitgehend auf die bemerkenswerte Leistungsfähigkeit von 
-CDCL-Lösern (Conflict-Driven Clause Learning) zurückzuführen. In der SAT-Forschung ist jedoch 
-bekannt, dass kein einzelner Löser bei allen Instanzen allen anderen überlegen ist. Verschiedene 
+CDCL-Lösern (Conflict-Driven Clause Learning) zurückzuführen\cite{springer_cdcl_2020}. In der SAT-Forschung ist jedoch 
+bekannt, dass kein einzelner Löser bei allen Instanzen allen anderen überlegen ist\cite{xu2008satzilla}. Verschiedene 
 Solver weisen komplementäre Leistungsmerkmale auf – ein Solver, der bei einer Instanzfamilie extrem 
 schnell ist, kann bei einer anderen schlecht abschneiden. Diese Beobachtung hat zur Entwicklung von 
 Algorithmusauswahlsystemen geführt, die automatisch den für eine bestimmte Instanz am besten 
@@ -60,43 +61,50 @@ geeigneten Solver auswählen.
 
 Diese Erkenntnis hat zur Entwicklung des portfoliabasierten SAT-Lösens geführt, bei dem eine Sammlung 
 von Solvern gepflegt wird und ein Auswahlmechanismus entscheidet, welcher Solver für eine bestimmte 
-Instanz eingesetzt wird. Die zugrunde liegende Idee ist einfach, aber wirkungsvoll: Wenn wir vorhersagen 
+Instanz eingesetzt wird\cite{xu2012contribution}. Die zugrunde liegende Idee ist einfach, aber wirkungsvoll: Wenn wir vorhersagen 
 können, welcher Solver bei einer Instanz die beste Leistung erbringt, können wir erhebliche Rechenzeit 
 einsparen, indem wir Solver mit schlechter Leistung vermeiden.
 
+SATZilla ist ein solches System, das auf der Extraktion struktureller Merkmale aus SAT-Instanzen 
+basiert\cite{shavit2024satzilla}. Die Implementierung des modernisierten Feature-Extraktors ist 
+öffentlich zugänglich und wurde für diese Arbeit verwendet.
+
+\newpage
+
 \subsection{Motivation}
 
-In meinem ürsprunglichen Bachelorprojekt, was mit dieser Bachelorarbeit verknüpft ist, bestannt meine 
-Aufgabe darin Satzilla im jahr 2025 zu wiederholen mit neuen Daten um dann zu vergleichen wie diese 
-neuen vorhersagen mit den Alten aus dem Jahr 2024 übereinstimmen würden.
+Im ursprünglichen Bachelorprojekt, das dieser Arbeit zugrunde liegt, bestand die Aufgabe darin, Satzilla 
+im Jahr 2025 mit neuen Daten zu replizieren, um einen Vergleich der Vorhersagen mit den Ergebnissen aus 
+dem Jahr 2024 zu ermöglichen.
 
-Dafür bekam ich von meinem Tutor Dr. Mathias Fleury den code von Satilla des Github repos und 400 cnf 
-Dateien aus der enstprechenden webseite.
+Die Durchführung der Arbeit war mit technischen Herausforderungen verbunden. Insbesondere waren bestimmte 
+Dateien nicht verfügbar, was die Kontaktaufnahme mit dem Autor der Satzilla-Implementierung erforderte. 
+Darüber hinaus erwies sich die lokale Recheninfrastruktur für die benötigten Vorhersagen als 
+unzureichend, insbesondere hinsichtlich des verfügbaren Arbeitsspeichers.
 
-Die Arbeit war nicht immer einfach und ich hatte mit technischen Problemen zu kämpfen, so fehlten gewisse
-Dateien für die ich an dem Autor der Universität Aachen von Satzilla anschreiben musste. Des weiteren 
-kam mein eigener PC an seine grenzen da er für die benötigten Vorhersagen nicht genug RAM hatte.
+Durch die Bereitstellung eines Hochleistungsrechners der Universität, der mittels SSH-Verbindung genutzt 
+werden konnte, konnten die erforderlichen Berechnungen dennoch abgeschlossen werden. Die benötigten 
+Laufzeiten der Kissat-Varianten sowie die vorverarbeiteten Benchmark-Datensätze wurden vom Betreuer 
+über eine Nextcloud-Freigabe zur Verfügung gestellt.\cite{runtimes2025}
 
-Dank der hilfe meiner beiden Tutoren konnte und der Bereitstellung eines PCs meiner Universität mit dem ich
-mich mit einer SSH Verbindung anmelden und benutzen konnte, konnte ich mein Arbeit zuende vollstellen.
+Der Haupteil dieser Arbeit beschäftigt sich mit der Vohersage von Solvern, nicht mit der Laufzeit. SATZilla 
+empfiehlt zum jeweiligen Solver ebenfalls eine Vorhergesehene Laufzeit mit empirischen Härtemodellen (EPMs) 
+,diese können aber Stark von der tatsächlichen Laufzeit des Solvers abweichen.\cite{shavit2024revisiting}
 
-Auch wenn das ergebniss meiner Arbeit nicht komplett zufriedenstellend war fand ich die Arbeit und Forschung
-interresant und herausfordernt.
+Im Rahmen dieser Arbeit lag der Fokus auf der Analyse der von Satzilla für die jeweiligen Benchmarks 
+empfohlenen Solver sowie der zugehörigen Laufzeiten.
 
-Besonders interresiert hat mich, welche die Predictions waren die mir Satzilla jeweils für meine benchmarks 
-empfohlen hat mit der dazugehörigen Laufzeit. Diese Daten konnte ich dann auswerten.
+Die vorliegende Arbeit untersucht zwei zentrale Fragestellungen:
 
-Für meine Bachelorarbeit, Predicting Kissat Performaance with Satzilla, wurde mir dann die volgenden zwei themen zugeweiesen:
-
-Erstes habe ich getestet ob man Satzilla komplett auf gewissen Kissat Konfigurationen trainiren kann, sprich
-ob sie korrekte predicitons machen. Dafür musste ich als erstes auch testen ob Satzilla überhaupt mit 
-seinem Machine Learning funktioniert da die ergebnisse im meinem Bachelorprojekt zweifel drauf 
-ankommen ließen.
-
-Zweitens habe ich getesten zu welchen ergebnissen man kommt wenn man Satzilla mit kissat trainiert und 
-dann auf preprocessed daten anwendet, einaml die benchmarks auf pre10k vereinfacht und dann auf pre100k 
-vereinfacht, was bis dato niemand zuvor gemacht hat.
-
-
+\begin{enumerate}
+    \item Ob Satzilla erfolgreich auf bestimmte Kissat-Konfigurationen trainiert werden kann, d.h. ob 
+    das Modell korrekte Vorhersagen trifft. Hierzu war zunächst eine Validierung der zugrundeliegenden
+    Machine-Learning-Pipeline erforderlich, da die Ergebnisse des ursprünglichen Projekts Zweifel an 
+    deren Funktionsfähigkeit aufkommen ließen.
+    
+    \item Ob bessere Ergebnisse erzielt werden, wenn Satzilla mit Kissat trainiert und anschließend auf 
+    vorverarbeitete Benchmark-Datensätze angewendet wird – konkret auf die Vereinfachungsstufen 
+    Pre10k und Pre100k. Diese Fragestellung wurde in dieser Form bislang nicht untersucht.
+\end{enumerate}
 
 

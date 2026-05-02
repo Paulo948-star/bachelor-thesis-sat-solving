@@ -1,19 +1,19 @@
 \section{\iflanguage{english}{Satzilla Outcome}{Satzilla Ergebnis}}\label{sec:satzilla_outcome}
 
-In diesem Kapitel beschreibe ich wie ich Satzilla mit sogenanten Fake Solvern valediert habe und 
-anschließend wie ich Satzilla mit kissat trainiert habe.
+In diesem Kapitel wird beschreiben wie Satzilla mit sogenanten Fake Solvern valediert wurde und 
+anschließend wie Satzilla mit kissat trainiert wurde.
 
-Zum schluss beschreibe ich die Features und ihre Wichtigkeit die ich durch das Training von Satzilla 
-bekommen habe.
+Zum schluss werden die Features und ihre Wichtigkeit, die ich durch das Training von Satzilla 
+entstanden sind, bewertet.
 
 \subsection{Validierung mit Fake Solvern}
 
-Da ich in meinem ursprünglichen Bachelorprojekt Predictions in Satzilla hatte die nicht mit den 
+Da in dem ursprünglichen Bachelorprojekt Predictions von Satzilla exisitierten die nicht mit den 
 tatsächlichen vorhersagen übereinstimmten (so wurde fälschlicherweiße ISAsat alle der beste Solver 
-für viele Probleme empfohlen) riet mir mein Tutor Dr. Mathias Fleury zu testen ob Satzilla überhaupt
+für viele Probleme empfohlen) wurde geraten zu testen ob Satzilla überhaupt
 richtig funktioniert und passende vorhersagen machen kann.
 
-Bevor ich Satzilla auf die Laufzeitdaten realer Solver angewandt haben, habe ich zunächst die gesamte 
+Bevor Satzilla auf die Laufzeitdaten realer Solver angewandt wurde, wurde zunächst die gesamte 
 Pipeline anhand künstlich erzeugter Solver-Verhaltensmuster validiert. Dieser Schritt war 
 entscheidend, um sicherzustellen, dass die Merkmalsextraktion, die Datenausrichtung und der 
 Lernmechanismus korrekt funktionieren.
@@ -23,9 +23,9 @@ Lernmechanismus korrekt funktionieren.
 
 \subsubsection{Design der fake Solver}
 
-Ich habe künstliche Solver erstellt, die explizite, bekannte Beziehungen zu den Eigenschaften der 
-Instanzen aufweisen (z. B. zur Anzahl der Variablen). Auf diese Weise konnte ich eine Referenzgröße 
-definieren: Für jede Instanz wussten ich genau, welcher Solver als der schnellste anzusehen war.
+Künstliche Solver wurden erstellt, die explizite, bekannte Beziehungen zu den Eigenschaften der 
+Instanzen aufweisen (z. B. zur Anzahl der Variablen). Auf diese Weise konnte man eine Referenzgröße 
+definieren: Für jede Instanz wussten man dann genau, welcher Solver als der schnellste anzusehen war.
 
 \begin{itemize}
     \setlength{\itemsep}{0pt}
@@ -59,7 +59,10 @@ Genauigkeit der Ergebnisse der Fake Solver:
 \end{table}
 
 Eine Genauigkeit von 99 \% bedeutet, dass Satzilla in 99 von 100 Fällen den schnellsten Fake Solver 
-korrekt identifiziert, was beweist, dass die Merkmalsextraktion und das Training einwandfrei funktionieren.
+korrekt identifiziert, bedeutet: wenn eine cnf Datei sehr wenig Variablen hatte so wurde von den drei 
+Fake Solvern demenentsprechend auch der empfohlen der Benchmarks mit wenig Variablen auch am schnellsten lösen konnte (in diesem fall in einer Sekunde),
+wärend die anderen zwei Solver dafür länger gebraucht hätten und daher auch nicht empfehlenswert gewesen wären. 
+Was beweist, dass die Merkmalsextraktion und das Training einwandfrei funktionieren.
 
 
 
@@ -68,9 +71,8 @@ Wichtigste Features der Fake Solver:
 \begin{table}[htbp]
     \centering
     \begin{tabular}{lcc}
-        \toprule
         \textbf{Rang} & \textbf{Feature} & \textbf{Relevanz} \\
-        \midrule
+        \toprule
         1 & nvarsOrig & 13.07\% \\
         \midrule
         2 & VCG-CLAUSE-min & 8.46\% \\
@@ -82,7 +84,9 @@ Wichtigste Features der Fake Solver:
 \end{table}
 
 Je höher der Prozentsatz des Features ist, desto stärker stützt sich das Modell bei seinen Vorhersagen 
-auf dieses Feature.
+auf dieses Feature. Da diese wichtigsten Features über Eigenschaften definiert sind, die Stark mit der Anzahl 
+von Variablen-größe und der Anzahl von Klauseln korrelieren, kann man drauß folgen das diese Fake solver 
+richtig arbeiten.
 
 \subsubsection{Interpretation}
 
@@ -106,7 +110,7 @@ Die hohe Genauigkeit ($\geq 99\%$) in drei von vier Tests und die Auswahl der Fe
 
 \subsection{Trainieren auf echten Kissat Solver Daten}
 
-Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solvers trainiert:
+Nach der Validierung wurde dann Satzilla mit sechs Konfigurationen des Kissat-Solvers trainiert:
 
 \begin{itemize}
     \setlength{\itemsep}{0pt}
@@ -127,7 +131,7 @@ Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solv
     \setlength{\itemsep}{0pt}
     \setlength{\parskip}{0pt}
     \setlength{\parsep}{0pt}
-    \item \textbf{397 Instanzen} mit vollständigen Features, die Features wurden mithilfen des Satzilla tools extrahiert
+    \item \textbf{400 Instanzen} mit vollständigen Features, die Features wurden mithilfen des Satzilla tools extrahiert \cite{shavit2024satzilla}
     \item \textbf{Laufzeiten} für jeden Solver bei jeder Instanz (aus tatsächlichen Ausführungen)
     \item \textbf{Train/test split}: 80 \% Training (317 Fälle), 20 \% Test (80 Fälle), stratifiziert, um die Verteilung der Solver beizubehalten
 \end{itemize}
@@ -141,7 +145,7 @@ Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solv
     \setlength{\parskip}{0pt}
     \setlength{\parsep}{0pt}
     \item \textbf{Model}: Random Forest Classifier (200 trees, max depth 20)
-    \item \textbf{Features}: 131 strukturelle Features (ohne LP-Merkmale, gemäß rt\_pred.py)
+    \item \textbf{Features}: 131 strukturelle Features (ohne LP-Merkmale, gemäß rt\_pred.py) \cite{shavit2024satzilla}
     \item \textbf{Ziel}: Für jede Instanz der Solver mit der kürzesten Laufzeit (der schnellste)
 \end{itemize}
 
@@ -157,10 +161,10 @@ Nach der Validierung habe ich Satzilla mit sechs Konfigurationen des Kissat-Solv
     \label{fig:accuracy_donut}
 \end{figure}
 
-Was wir in dieser Graphik sehen ist das in 43.8\% der Fälle Satzilla trainier auf Kissat tatstächlich
+Was man in dieser Graphik sehen ist kann das in 43.8\% der Fälle Satzilla trainier auf Kissat tatstächlich
 den schnellsten und somit besten Solver empfiehlt. 
 
-Dies zeigt uns das selbst bei begrenzten Trainingsdaten (397 Instanzen für 6 Solver) schneidet Satzilla 
+Dies zeigt uns das selbst bei begrenzten Trainingsdaten (400 Instanzen für 6 Solver) schneidet Satzilla 
 deutlich besser ab als eine zufällige Auswahl.
 
 \begin{figure}[htbp]
@@ -180,8 +184,8 @@ Satzilla trainiert auf Kissat zeigt das es zuverlässig den schnellsten solver e
 \subsection{Top-K-Genauigkeit: Der Wert des „fast Richtigen“}
 
 Bei der Lösung von SAT-Problemen in der Praxis reicht es oft aus, wenn das Ergebnis nahe am optimalen 
-Lösungsvorschlag liegt. Ein Nutzer kann die ersten k Empfehlungen nacheinander ausprobieren. Daher habe 
-ich auch die Genauigkeit der Top-2- und Top-3-Ergebnisse gemessen – also die Wahrscheinlichkeit, dass 
+Lösungsvorschlag liegt. Ein Nutzer kann die ersten k Empfehlungen nacheinander ausprobieren. Daher wurde
+auch die Genauigkeit der Top-2- und Top-3-Ergebnisse gemessen – also die Wahrscheinlichkeit, dass 
 der tatsächlich schnellste Lösungsvorschlag unter den ersten k Vorhersagen auftaucht.
 
 
@@ -226,7 +230,7 @@ Hier die Ergebnisse dargestellt als Grafiken
     \item Selbst wenn Satzilla nicht den absolut schnellsten Solver vorhersagt, \textbf{empfiehlt es so gut wie nie den schlechtesten Solver}
 \end{itemize}
 
-Um den praktischen Nutzen von Satzilla zu quantifizieren, vergleichen wir die vorhergesagte Laufzeit des 
+Um den praktischen Nutzen von Satzilla zu quantifizieren, vergleicht man die vorhergesagte Laufzeit des 
 empfohlenen Solvers mit der Laufzeit des kissat\_default-Solvers auf den 80 Testinstanzen.
 
 \textbf{Berechnungsgrundlage}
@@ -280,11 +284,11 @@ sondern liefert einen messbaren, praktischen Zeitvorteil für die portfoliogest�
 \subsection{Feature Importance Analysis}
 
 Für die Interpretierbarkeit ist es wichtig zu verstehen, welche Features die Auswahl des Solvers 
-beeinflussen. Ich haben die Merkmalsbedeutungswerte des trainierten Random-Forest-Modells analysiert.
+beeinflussen. Hier wurden die Merkmalsbedeutungswerte des trainierten Random-Forest-Modells analysiert.
 
 \subsubsection{Wichtigste Features}
 
-Die analyse der Features zeigt auf, welche Eigenschaften einer Instanz die Auswahlentscheidungen des 
+Die Analyse der Features zeigt auf, welche Eigenschaften einer Instanz die Auswahlentscheidungen des 
 Satzilla-Lösers am stärksten beeinflussen. Dies ist nicht nur für die Interpretierbarkeit des Modells von
 Bedeutung, sondern auch für das Verständnis, was eine SAT-Instanz für verschiedene 
 Kissat-Konfigurationen „einfach“ oder „schwierig“ macht.
@@ -432,6 +436,9 @@ aber aussagekräftigen Beitrag zu den Entscheidungen des Modells.
 
 \subsubsection{Feature Kategorien – Zusammenfassung}
 
+Diese Tabelle stellt zusammenfassend die Wichtigsten extrahierten Features für das Training und Testen 
+SATZillas mit den sechs Kissat Konfigurationen.
+
 \begin{table}[H]
     \centering
     \begin{tabular}{p{0.2\textwidth}p{0.22\textwidth}p{0.2\textwidth}p{0.35\textwidth}}
@@ -452,6 +459,9 @@ aber aussagekräftigen Beitrag zu den Entscheidungen des Modells.
     \end{tabular}
     \caption{Feature Kategorien und ihre wichtigkeit}\label{tab:feature_Kategorien}
 \end{table}
+
+Die Verzweigungsheuristik (auch Entscheidungsheuristik oder Branching-Heuristik) legt fest, welche 
+Variable als nächstes gewählt wird und welcher Wahrheitswert ihr zuerst zugewiesen wird.\cite{biere2021handbook}
 
 \textbf{Zusammenfassend}: Die Auswahl des Solvers hängt in erster Linie von den \textbf{Eigenschaften des 
 Strukturgraphen ab}, insbesondere von denen, die sich auf die Klauseln beziehen. Vorverarbeitung, 
@@ -490,28 +500,29 @@ der einzelnen Solver im Testdatensatz:
     \setlength{\parsep}{0pt}
     \item \textbf{Gut repräsentierte Solver} (mit mehr Trainingsinstanzen) erzielen eine höhere Genauigkeit
     \item kissat\_nostable kommt in 96 Trainingsinstanzen vor → \textbf{74 \% Testgenauigkeit}
-    \item kissat\_stable and kissat\_noeliminate kommen nur in 28 and 39 training instances vor → \textbf{0\% vorhersagen Genauigkeit}
-    \item Dies macht eine \textbf{Einschränkung der Daten} deutlich: Bei insgesamt nur 397 Instanzen verfügen einige Solver über zu wenige Beispiele, als dass das Modell ihr Verhalten zuverlässig erlernen könnte
+    \item kissat\_stable and kissat\_noeliminate kommen nur in 28 and 39 Trainingsinstanzen vor → \textbf{0\% vorhersagen Genauigkeit}
+    \item Dies macht eine \textbf{Einschränkung der Daten} deutlich: Bei insgesamt nur 400 Instanzen verfügen einige Solver über zu wenige Beispiele, als dass das Modell ihr Verhalten zuverlässig erlernen könnte
 \end{itemize}
 
 \textbf{Folgerung}: Eine Vergrößerung des Trainingsdatensatzes würde wahrscheinlich die Genauigkeit 
-verbessern, insbesondere bei unterrepräsentierten Solvern.
+verbessern, insbesondere bei unterrepräsentierten Solvern. Ein andere verteilung von Training und Testen 
+würde ebenfalls die Solver genauer empfehlen die Häufiger in Trainingsinstanzen vorkommen.
 
 \newpage
 
 \subsection{Auswirkungen der Einbindung von LP-Features}
 
-Bei der Feature extraction der einzelnen Benchmarks ist mir aufgefallen das man Features extrahieren konnte 
-die nicht in der Liste von features von rt\_pred.py in Satzilla vorkommen aber denoch im Paper zu Satzilla.
+Bei der Feature extraction der einzelnen Benchmarks wurden Features extrahiert 
+die nicht in der Liste von Features von rt\_pred.py in Satzilla vorkommen aber denoch im Paper zu Satzilla.\cite{shavit2024revisiting}
 
 LP\-Features (Features der linearen Programmierung) sind Instanzmerkmale, die sich aus der Lösung einer 
 linearen Programmierungsrelaxation des SAT-Problems ableiten.
 
-Mit den sieben LP-Features - LP\_OBJ, LPSLack-mean, LPSLack-coeff-variation, LPSLack-min, LPSLack-max, lpIntRatio und lpTIME - hatte
-ich dann instesammt alle 138 Features und nicht nur 131 die in rt\_pred aufgelistet sind.
+Mit den sieben LP-Features - LP\_OBJ, LPSLack-mean, LPSLack-coeff-variation, LPSLack-min, LPSLack-max, lpIntRatio und lpTIME - waren 
+dann instesammt alle 138 möglichen Features vorhanden und nicht nur 131 die in rt\_pred aufgelistet sind. \cite{shavit2024satzilla}
 
-Um zu testen ob die Fehlenden LP\-Features meine vorhersagen verbessern konnten habe ich mein auf Kissat
-trainiertes Satzilla wieder auf die gleichen Instanzen getestet (dieses mal mit 138 Features)
+Um zu testen ob die Fehlenden LP\-Features die Vorhersagen verbessern konnten wurde das auf Kissat
+trainiertes Satzilla wieder auf die gleichen Instanzen getestet, dieses mal jedoch mit 138 Features.
 
 \subsubsection{Ergebnis}
 
@@ -538,6 +549,9 @@ trainiertes Satzilla wieder auf die gleichen Instanzen getestet (dieses mal mit 
     \item Die Features Relevanz der LP-Merkmale lag jeweils unter 0,35 \%
     \item Die Extraktion von LP-Features ist rechenintensiv.
 \end{itemize}
+
+Der Grunde warum die Vorhersagen mit dem hinzufügen keine Verbesserung zeigt liegt wahrscheinlich daran 
+das die Extraktion sehr rechenintensiv ist, nicht besonders relevant sind und wohl eher als "noise" gekentzeichnet wird.
 
 \textbf{Fazit}: Der Verzicht auf LP-Features (wie im ursprünglichen rt\_pred.py) ist gerechtfertigt. Strukturelle 
 Merkmale reichen für diese Aufgabe aus. Das könnte auch der Grund sein weshalb sie aus der liste von 
